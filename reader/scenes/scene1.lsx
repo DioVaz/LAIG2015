@@ -1,0 +1,33 @@
+<SCENE>
+
+<INITIALS>
+    <frustum near="-1.0" far="1.0"/>                      <!-- frustum planes-->
+    <translate x="0" y="0" z="0" />                 <!-- initial translate -->
+    <rotation axis="x" angle="0" />                  <!-- initial rotation 3 -->
+    <rotation axis="y" angle="0" />                  <!-- initial rotation 2 -->
+    <rotation axis="z" angle="0" />                  <!-- initial rotation 1 -->
+    <scale sx="0" sy="0" sz="0" />                  <!-- initial scaling -->
+    <reference length="2.5" />                          <!-- axis length; "0" means no axis-->
+
+</INITIALS>
+
+<ILLUMINATION>
+    <ambient r="1" g="1" b="1" a="0" />            <!-- global ambient -->
+    <background r="1" g="1" b="0" a="1.0" />         <!-- background color -->
+</ILLUMINATION>
+
+
+<LIGHTS>
+    <LIGHT id="foco">                                    <!-- light identifier -->
+        <enable value ="1" />                         <!-- enable/disable -->
+        <position x="1" y="1" z="1" w="ff" />       <!-- light position -->
+        <ambient r="ff" g="ff" b="ff" a="ff" />        <!-- ambient component -->
+        <diffuse r="0" g="0" b="0" a="0" />        <!-- diffuse component -->
+        <specular r="0" g="0" b="0" a="0" />       <!-- specular component -->
+    </LIGHT>
+
+    <!-- NOTE: this block "LIGHT" must be repeated as necessary with different "id" -->
+    
+</LIGHTS>
+
+<SCENE/>

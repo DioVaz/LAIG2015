@@ -1,0 +1,8 @@
+LSXnode.prototype.getElementsByTagName = function(name){
+
+
+}
+
+LinkedList.prototype.append
+
+LinkedList.prototype.append = function(data){
