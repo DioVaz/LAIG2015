@@ -86,7 +86,35 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 
 	this.scene.axis = new CGFaxis(this.scene, axis_length, 0.2);
 	
-	
+	var translate=elems[0].children[1];
+	var tX = 0.0;
+	var tY = 0.0;
+	var tZ = 0.0;
+	tX = translate.getAttribute('x');
+	tY = translate.getAttribute('y');
+	tZ = translate.getAttribute('z');
+
+	var rotation3=elems[0].children[2];
+	var taxis3 = 'a';
+	var tangule3 = 0.0;
+	taxis3 = rotation3.getAttribute('axis');
+	tangule3 = rotation3.getAttribute('angle');
+	this.scene.rotate(taxis3, tangule3);
+
+	var rotation2=elems[0].children[3];
+	var taxis2 = 'a';
+	var tangule2 = 0.0;
+	taxis2 = rotation3.getAttribute('axis');
+	tangule2 = rotation3.getAttribute('angle');
+	this.scene.rotate(taxis2, tangule2);
+
+	var rotation1=elems[0].children[4];
+	var taxis1 = 'a';
+	var tangule1 = 0.0;
+	taxis1 = rotation3.getAttribute('axis');
+	tangule1 = rotation3.getAttribute('angle');
+	console.log(taxis1+tangule1 );
+	this.scene.rotate(taxis1, tangule1);
 	var tempIllumination=rootElement.getElementsByTagName('ILLUMINATION');
 
 	if (tempIllumination == null  || tempIllumination.length==0) {
