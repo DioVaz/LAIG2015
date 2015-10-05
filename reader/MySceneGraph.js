@@ -46,7 +46,7 @@ MySceneGraph.prototype.onXMLReady=function()
  */
 MySceneGraph.prototype.parseInitials= function(rootElement) {
 	
-	
+	//<INITIALS>
 	var elems =  rootElement.getElementsByTagName('INITIALS');
 	if (elems == null) {
 		return "globals element is missing.";
@@ -55,24 +55,11 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	if (elems.length != 1) {
 		return "either zero or more than one 'globals' element found.";
 	}
-
-	// various examples of different types of access
 	var initials = elems[0];
-	//this.background = this.reader.getRGBA(globals, 'background');
-	//this.drawmode = this.reader.getItem(globals, 'drawmode', ["fill","line","point"]);
-	//this.cullface = this.reader.getItem(globals, 'cullface', ["back","front","none", "frontandback"]);
-	//this.cullorder = this.reader.getItem(globals, 'cullorder', ["ccw","cw"]);
-
-	//console.log("Globals read from file: {background=" + this.background + ", drawmode=" + this.drawmode + ", cullface=" + this.cullface + ", cullorder=" + this.cullorder + "}");
-
-	// Create a new perspective projection matrix. The height will stay the same
-// while the width will vary as per aspect ratio.
 	
+	//<frustum>
 	var frust=elems[0].children[0];
 	console.log(frust)
-	//canvas = this.getElementById("canvas");
-	//canvas = this.gl.canvas.clientWidth
-	//var ratio = canvas.clientWidth / canvas.clientHeight;
 	var left = -10;
 	var right = 10;
 	var bottom = -1.0;
@@ -82,10 +69,7 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
      //projectionMatrix
 	this.frustum = mat4.frustum(left, right, bottom, top, near, far, 0);
 	
-	var axis_length = parseFloat(elems[0].children[6].getAttribute('length'));
-
-	this.scene.axis = new CGFaxis(this.scene, axis_length, 0.2);
-	
+	//<translate>
 	var translate=elems[0].children[1];
 	var tX = 0.0;
 	var tY = 0.0;
@@ -94,6 +78,7 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	tY = translate.getAttribute('y');
 	tZ = translate.getAttribute('z');
 
+	//<rotation3>
 	var rotation3=elems[0].children[2];
 	var taxis3 = 'a';
 	var tangule3 = 0.0;
@@ -101,6 +86,7 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	tangule3 = rotation3.getAttribute('angle');
 	this.scene.rotate(taxis3, tangule3);
 
+	//<rotation2>
 	var rotation2=elems[0].children[3];
 	var taxis2 = 'a';
 	var tangule2 = 0.0;
@@ -108,6 +94,7 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	tangule2 = rotation3.getAttribute('angle');
 	this.scene.rotate(taxis2, tangule2);
 
+	//<rotation1>
 	var rotation1=elems[0].children[4];
 	var taxis1 = 'a';
 	var tangule1 = 0.0;
@@ -115,6 +102,12 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	tangule1 = rotation3.getAttribute('angle');
 	console.log(taxis1+tangule1 );
 	this.scene.rotate(taxis1, tangule1);
+
+	//<reference>
+	var axis_length = parseFloat(elems[0].children[6].getAttribute('length'));
+	this.scene.axis = new CGFaxis(this.scene, axis_length, 0.2);
+
+	//<ILLUMINATION>
 	var tempIllumination=rootElement.getElementsByTagName('ILLUMINATION');
 
 	if (tempIllumination == null  || tempIllumination.length==0) {
@@ -147,17 +140,6 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 
 	var tempLights=rootElement.getElementsByTagName('Lights');
 	
-	//console.log(this.reader.getItem(nnodes,'background'));
-	//this.background
-	//for (var i=0; i< nnodes; i++)
-	//{
-	//	var e=tempIllumination[0].children[i];
-	//	console.log(e);
-
-	//	// process each element and store its information
-	//	this.illumination[e.id]=e.attributes.getNamedItem("background").value;
-	//	console.log("Read list item id "+ e.id+" with value "+this.illumination[e.id]);
-	//};
 
 };
 
@@ -184,3 +166,30 @@ MySceneGraph.prototype.onXMLError=function (message) {
 };
 
 
+//CODIGO COMENTADO APAGAR ANTES DE ENTREGAR
+//this.background = this.reader.getRGBA(globals, 'background');
+//this.drawmode = this.reader.getItem(globals, 'drawmode', ["fill","line","point"]);
+//this.cullface = this.reader.getItem(globals, 'cullface', ["back","front","none", "frontandback"]);
+//this.cullorder = this.reader.getItem(globals, 'cullorder', ["ccw","cw"]);
+
+//console.log("Globals read from file: {background=" + this.background + ", drawmode=" + this.drawmode + ", cullface=" + this.cullface + ", cullorder=" + this.cullorder + "}");
+
+// Create a new perspective projection matrix. The height will stay the same
+// while the width will vary as per aspect ratio.
+
+
+//canvas = this.getElementById("canvas");
+//canvas = this.gl.canvas.clientWidth
+//var ratio = canvas.clientWidth / canvas.clientHeight;
+
+//console.log(this.reader.getItem(nnodes,'background'));
+//this.background
+//for (var i=0; i< nnodes; i++)
+//{
+//	var e=tempIllumination[0].children[i];
+//	console.log(e);
+
+//	// process each element and store its information
+//	this.illumination[e.id]=e.attributes.getNamedItem("background").value;
+//	console.log("Read list item id "+ e.id+" with value "+this.illumination[e.id]);
+//};
