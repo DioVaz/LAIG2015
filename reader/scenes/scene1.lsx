@@ -7,7 +7,7 @@
     <rotation axis="y" angle="0.4" />                  <!-- initial rotation 2 -->
     <rotation axis="z" angle="0.2" />                  <!-- initial rotation 1 -->
     <scale sx="0" sy="0" sz="0" />                  <!-- initial scaling -->
-    <reference length="1" />                          <!-- axis length; "0" means no axis-->
+    <reference length="5" />                          <!-- axis length; "0" means no axis-->
 
 </INITIALS>
 
@@ -26,8 +26,37 @@
         <specular r="0" g="0" b="0" a="0" />       <!-- specular component -->
     </LIGHT>
 
-    <!-- NOTE: this block "LIGHT" must be repeated as necessary with different "id" -->
-    
+    <LIGHT id="foco1">                                    <!-- light identifier -->
+        <enable value ="1" />                         <!-- enable/disable -->
+        <position x="1" y="1" z="1" w="ff" />       <!-- light position -->
+        <ambient r="ff" g="ff" b="ff" a="ff" />        <!-- ambient component -->
+        <diffuse r="0" g="0" b="0" a="0" />        <!-- diffuse component -->
+        <specular r="0" g="0" b="0" a="0" />       <!-- specular component -->
+    </LIGHT>
 </LIGHTS>
+
+<TEXTURES>
+    <TEXTURE id="madeira">
+        <file path="textures/madeira.jpg" />                             <!-- path to file -->
+        <amplif_factor s="1.0" t="1.0" />                <!-- x/s, y/t -->
+    </TEXTURE>
+    <TEXTURE id="aço">
+        <file path="textures/aço.jpg" />                             <!-- path to file -->
+        <amplif_factor s="1.0" t="1.0" />                <!-- x/s, y/t -->
+    </TEXTURE>
+
+</TEXTURES>
+
+<MATERIALS>
+    <MATERIAL id="madeira">                                  
+        <shininess value="1" />
+        <specular r="0.2" g="0.2" b="0.2" a="1" />        <!-- specular reflection -->
+        <diffuse r="0" g="0" b="1" a="1" />         <!-- diffuse reflection -->
+        <ambient r="0.2" g="0.2" b="0.2" a="1" />         <!-- ambient reflection -->
+        <emission r="0.2" g="0.2" b="0.2" a="1" />        <!-- emission component -->
+    </MATERIAL>
+</MATERIALS>
+
+
 
 <SCENE/>
