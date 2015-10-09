@@ -7,11 +7,7 @@
     <rotation axis="y" angle="0" />                  <!-- initial rotation 2 -->
     <rotation axis="z" angle="0" />                  <!-- initial rotation 1 -->
     <scale sx="0" sy="0" sz="0" />                  <!-- initial scaling -->
-<<<<<<< HEAD
-    <reference length="5" />                          <!-- axis length; "0" means no axis-->
-=======
     <reference length="10" />                          <!-- axis length; "0" means no axis-->
->>>>>>> origin/master
 
 </INITIALS>
 
@@ -37,42 +33,10 @@
         <specular r="1" g="1" b="1" a="1"  />       <!-- specular component -->
     </LIGHT>
 
-    <LIGHT id="foco1">                                    <!-- light identifier -->
-        <enable value ="1" />                         <!-- enable/disable -->
-        <position x="1" y="1" z="1" w="ff" />       <!-- light position -->
-        <ambient r="ff" g="ff" b="ff" a="ff" />        <!-- ambient component -->
-        <diffuse r="0" g="0" b="0" a="0" />        <!-- diffuse component -->
-        <specular r="0" g="0" b="0" a="0" />       <!-- specular component -->
-    </LIGHT>
+    <!-- NOTE: this block "LIGHT" must be repeated as necessary with different "id" -->
+    
 </LIGHTS>
 
-<<<<<<< HEAD
-<TEXTURES>
-    <TEXTURE id="madeira">
-        <file path="textures/madeira.jpg" />                             <!-- path to file -->
-        <amplif_factor s="1.0" t="1.0" />                <!-- x/s, y/t -->
-    </TEXTURE>
-    <TEXTURE id="aço">
-        <file path="textures/aço.jpg" />                             <!-- path to file -->
-        <amplif_factor s="1.0" t="1.0" />                <!-- x/s, y/t -->
-    </TEXTURE>
-
-</TEXTURES>
-
-<MATERIALS>
-    <MATERIAL id="madeira">                                  
-        <shininess value="1" />
-        <specular r="0.2" g="0.2" b="0.2" a="1" />        <!-- specular reflection -->
-        <diffuse r="0" g="0" b="1" a="1" />         <!-- diffuse reflection -->
-        <ambient r="0.2" g="0.2" b="0.2" a="1" />         <!-- ambient reflection -->
-        <emission r="0.2" g="0.2" b="0.2" a="1" />        <!-- emission component -->
-    </MATERIAL>
-</MATERIALS>
-
-
-
-<SCENE/>
-=======
 
 
 <TEXTURES>
@@ -122,25 +86,51 @@
     <ROOT id="idRoot" />     <!-- identifier of root node of the scene graph; this node     -->
                          <!--   must be defined in one of the following NODE declarations -->
 
-    <NODE id="ss">       <!--   defines one intermediate node; may be repeated as necessary -->
+    <NODE id="groundFloor">       <!--   defines one intermediate node; may be repeated as necessary -->
 
         <!-- next two lines are mandatory -->
-        <MATERIAL id="ss" />      <!-- declared material superimposes the material received from parent node -->
+        <MATERIAL id="floor" />      <!-- declared material superimposes the material received from parent node -->
                                   <!-- id="null" maintains material from parent node        -->
-        <TEXTURE id="ss" />       <!-- declared texture superimposes the texture received from parent node -->
+        <TEXTURE id="clear" />       <!-- declared texture superimposes the texture received from parent node -->
                                   <!-- id="null" maintains texture from parent node       -->
                                   <!-- id="clear" clears texture declaration received from parent node      -->
 
 
         <!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
-        <TRANSLATION x="ff" y="ff" z="ff" />
-        <ROTATION axis="cc" angle="ff" />
-        <SCALE sx="ff" sy="ff" sz="ff" />
+        <TRANSLATION x="0" y="0" z="0" />
+        <ROTATION axis="x" angle="0" />
+        <SCALE sx="0" sy="0" sz="0" />
 
 
         <!-- declaring descendents, ate least one node or one leaf must be present -->
         <DESCENDANTS>
-            <DESCENDANT id="ss" />       <!-- "ss" is the identifier of a node or of leaf; -->
+            <DESCENDANT id="idCylinder" />       <!-- "ss" is the identifier of a node or of leaf; -->
+                                         <!-- may be repeatad as necessary. It can refer an -->
+                                         <!-- identifier of another node or leaf, later defined in the lsx file. -->
+        </DESCENDANTS>
+
+    </NODE>
+	
+	
+	<NODE id="firstFloor">       <!--   defines one intermediate node; may be repeated as necessary -->
+
+        <!-- next two lines are mandatory -->
+        <MATERIAL id="floor" />      <!-- declared material superimposes the material received from parent node -->
+                                  <!-- id="null" maintains material from parent node        -->
+        <TEXTURE id="clear" />       <!-- declared texture superimposes the texture received from parent node -->
+                                  <!-- id="null" maintains texture from parent node       -->
+                                  <!-- id="clear" clears texture declaration received from parent node      -->
+
+
+        <!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
+        <TRANSLATION x="0" y="0" z="0" />
+        <ROTATION axis="x" angle="0" />
+        <SCALE sx="0" sy="0" sz="0" />
+
+
+        <!-- declaring descendents, ate least one node or one leaf must be present -->
+        <DESCENDANTS>
+            <DESCENDANT id="idCylinder" />       <!-- "ss" is the identifier of a node or of leaf; -->
                                          <!-- may be repeatad as necessary. It can refer an -->
                                          <!-- identifier of another node or leaf, later defined in the lsx file. -->
         </DESCENDANTS>
@@ -151,4 +141,3 @@
 
 </SCENE>
  
->>>>>>> origin/master
