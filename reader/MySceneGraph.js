@@ -1,4 +1,3 @@
-
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
 
@@ -33,6 +32,23 @@ MySceneGraph.prototype.onXMLReady=function()
 		this.onXMLError(error);
 		return;
 	}
+<<<<<<< HEAD
+=======
+	
+	error = this.parseLights(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+	
+	error = this.parseNodes(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+>>>>>>> origin/master
 
 	this.loadedOk=true;
 
@@ -44,8 +60,13 @@ MySceneGraph.prototype.onXMLReady=function()
 /*
  * Example of method that parses elements of one block and stores information in a specific data structure
  */
+<<<<<<< HEAD
 MySceneGraph.prototype.parseInitials= function(rootElement) {
 
+=======
+MySceneGraph.prototype.parseInitials = function(rootElement) {
+	
+>>>>>>> origin/master
 	//<INITIALS>
 	var elems =  rootElement.getElementsByTagName('INITIALS');
 	if (elems == null) {
@@ -58,15 +79,12 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	var initials = elems[0];
 
 	//<frustum>
-	var frust=elems[0].children[0];
-	console.log(frust)
-	var left = -10;
-	var right = 10;
-	var bottom = -1.0;
-	var top = 1.0;
-	var near = frust.getAttribute('near');
-	var far = frust.getAttribute('far');
+	var frust = elems[0].children[0];
+
+	var near = this.reader.getFloat(frust, 'near');
+	var far = this.reader.getFloat(frust, 'far');
      //projectionMatrix
+<<<<<<< HEAD
 	this.frustum = mat4.frustum(left, right, bottom, top, near, far, 0);
 
 	//<translate>
@@ -78,33 +96,40 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	tY = translate.getAttribute('y');
 	tZ = translate.getAttribute('z');
 	console.log(translate);
+=======
+	
+	//<translate>
+	var translate = elems[0].children[1];
+	
+	var tX = translate.getAttribute('x');
+	var tY = translate.getAttribute('y');
+	var tZ = translate.getAttribute('z');
+>>>>>>> origin/master
 
 	//<rotation3>
-	var rotation3=elems[0].children[2];
-	var taxis3 = 'a';
-	var tangule3 = 0.0;
-	taxis3 = rotation3.getAttribute('axis');
-	tangule3 = rotation3.getAttribute('angle');
+	var rotation3 = elems[0].children[2];
+	
+	var taxis3 = rotation3.getAttribute('axis');
+	var tangule3 = rotation3.getAttribute('angle');
 	this.scene.rotate(taxis3, tangule3);
 	console.log(rotation3);
 
 	//<rotation2>
 	var rotation2=elems[0].children[3];
-	var taxis2 = 'a';
-	var tangule2 = 0.0;
-	taxis2 = rotation3.getAttribute('axis');
-	tangule2 = rotation3.getAttribute('angle');
+	
+	var taxis2 = rotation3.getAttribute('axis');
+	var tangule2 = rotation3.getAttribute('angle');
 	this.scene.rotate(taxis2, tangule2);
 	console.log(rotation2);
 
 	//<rotation1>
 	var rotation1=elems[0].children[4];
-	var taxis1 = 'a';
-	var tangule1 = 0.0;
-	taxis1 = rotation3.getAttribute('axis');
-	tangule1 = rotation3.getAttribute('angle');
-	console.log(taxis1+tangule1 );
+
+	var taxis1 = rotation3.getAttribute('axis');
+	var tangule1 = rotation3.getAttribute('angle');
+
 	this.scene.rotate(taxis1, tangule1);
+<<<<<<< HEAD
 	console.log(rotation1);
 
 	//<scale>
@@ -121,6 +146,14 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	var axis_length = parseFloat(elems[0].children[6].getAttribute('length'));
 	this.scene.axis = new CGFaxis(this.scene, axis_length, 0.2);
 	console.log("axis length = "+axis_length);
+=======
+	
+	this.camera = new CGFcamera(0.4, near, far, vec3.fromValues(25, 25, 25), vec3.fromValues(0, 0, 0));
+
+	//<reference>
+	var axis_length = this.reader.getFloat(elems[0].children[6],'length');
+	this.scene.axis = new CGFaxis(this.scene, axis_length);
+>>>>>>> origin/master
 
 	//<ILLUMINATION>
 	var tempIllumination=rootElement.getElementsByTagName('ILLUMINATION');
@@ -131,7 +164,7 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 
 	this.illumination=[];
 	// iterate over every element
-	var nnodes=tempIllumination[0].children.length;
+
 
 	var ilum=tempIllumination[0].children[0];
 	var back=tempIllumination[0].children[1];
@@ -153,6 +186,7 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	tempBackground[3] = back.getAttribute('a');
 	this.background = tempBackground;
 
+<<<<<<< HEAD
 	//<LIGHTS>
 	var tempLights=rootElement.getElementsByTagName('LIGHTS');
 	if (tempLights == null) {
@@ -278,19 +312,156 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 		var memiA=tMaterials[nMaterials].children[4].getAttribute("a");
 	}
 
-
+=======
 };
 
+
+MySceneGraph.prototype.parseLights = function(rootElement){
+	
+	var tempLights = rootElement.getElementsByTagName('LIGHTS');
+>>>>>>> origin/master
+
+	var nnodes=tempLights[0].children.length;
+	
+	for (i = 0; i < nnodes; i++) { 
+		light = tempLights[0].children[i];
+		id = light.getAttribute('id');
+		var tempEnable = light.getElementsByTagName('enable');
+		
+		n_light = this.scene.lights[i];
+
+<<<<<<< HEAD
 MySceneGraph.prototype.parseLight = function(rootElement){
 
+=======
+		if(this.reader.getBoolean(tempEnable[0],'value'))
+			n_light.enable();
+		else
+			n_light.disable();
+		
+		//position
+		var position = light.getElementsByTagName('position');
+		var x = this.reader.getFloat(position[0], 'x');
+		var y = this.reader.getFloat(position[0], 'y');
+		var z = this.reader.getFloat(position[0], 'z');
+		var w = this.reader.getFloat(position[0], 'w');
+		
+		n_light.setPosition(x,y,z,w);
+		
+		//ambient
+		var ambient = light.getElementsByTagName('ambient');
+		var r = this.reader.getFloat(ambient[0], 'r');
+		var g = this.reader.getFloat(ambient[0], 'g');
+		var b = this.reader.getFloat(ambient[0], 'b');
+		var a = this.reader.getFloat(ambient[0], 'a');
+		
+		n_light.setAmbient(r,g,b,a);
+		
+		//diffuse
+		var diffuse = light.getElementsByTagName('diffuse');
+		r = this.reader.getFloat(diffuse[0], 'r');
+		g = this.reader.getFloat(diffuse[0], 'g');
+		b = this.reader.getFloat(diffuse[0], 'b');
+		a = this.reader.getFloat(diffuse[0], 'a');
+		
+		n_light.setDiffuse(r,g,b,a);
+		
+		//specular
+		var specular = light.getElementsByTagName('specular');
+		r = this.reader.getFloat(specular[0], 'r');
+		g = this.reader.getFloat(specular[0], 'g');
+		b = this.reader.getFloat(specular[0], 'b');
+		a = this.reader.getFloat(specular[0], 'a');
+		
+		n_light.setSpecular(r,g,b,a);
+		
+		this.scene.addLight(n_light, i);
+		
+	}
+	
+>>>>>>> origin/master
 }
 
 
 
-var Node = function(){
-	this.children = [];
-	this.localTransformations = makeIdentity();
+MySceneGraph.prototype.parseNodes = function(rootElement){
+	
+	var tempNodes = rootElement.getElementsByTagName('NODES');
+	
+	var nnodes=tempNodes[0].children.length;
+	
+	//Special Case - Root
+	root = tempNodes[0].children[0];
+	id = root.getAttribute('id');
+
+	
+	//Other Nodes
+	for (i = 1; i < nnodes; i++) { 
+		node = tempNodes[0].children[i];
+		id = light.getAttribute('id');
+		console.log(id);
+		/*
+		var tempEnable = light.getElementsByTagName('enable');
+		
+		n_light = this.scene.lights[i];
+
+		if(this.reader.getBoolean(tempEnable[0],'value'))
+			n_light.enable();
+		else
+			n_light.disable();
+		
+		//position
+		var position = light.getElementsByTagName('position');
+		var x = this.reader.getFloat(position[0], 'x');
+		var y = this.reader.getFloat(position[0], 'y');
+		var z = this.reader.getFloat(position[0], 'z');
+		var w = this.reader.getFloat(position[0], 'w');
+		
+		n_light.setPosition(x,y,z,w);
+		
+		//ambient
+		var ambient = light.getElementsByTagName('ambient');
+		var r = this.reader.getFloat(ambient[0], 'r');
+		var g = this.reader.getFloat(ambient[0], 'g');
+		var b = this.reader.getFloat(ambient[0], 'b');
+		var a = this.reader.getFloat(ambient[0], 'a');
+		
+		n_light.setAmbient(r,g,b,a);
+		
+		//diffuse
+		var diffuse = light.getElementsByTagName('diffuse');
+		r = this.reader.getFloat(diffuse[0], 'r');
+		g = this.reader.getFloat(diffuse[0], 'g');
+		b = this.reader.getFloat(diffuse[0], 'b');
+		a = this.reader.getFloat(diffuse[0], 'a');
+		
+		n_light.setDiffuse(r,g,b,a);
+		
+		//specular
+		var specular = light.getElementsByTagName('specular');
+		r = this.reader.getFloat(specular[0], 'r');
+		g = this.reader.getFloat(specular[0], 'g');
+		b = this.reader.getFloat(specular[0], 'b');
+		a = this.reader.getFloat(specular[0], 'a');
+		
+		n_light.setSpecular(r,g,b,a);
+		
+		console.log(n_light);
+		this.scene.addLight(n_light, i);
+		*/
+	
+		
+	}
+	
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -331,3 +502,4 @@ MySceneGraph.prototype.onXMLError=function (message) {
 //	this.illumination[e.id]=e.attributes.getNamedItem("background").value;
 //	console.log("Read list item id "+ e.id+" with value "+this.illumination[e.id]);
 //};
+

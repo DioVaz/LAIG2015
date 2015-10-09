@@ -11,7 +11,7 @@ XMLscene.prototype.init = function (application) {
 
     this.initCameras();
 
-  //  this.initLights();
+//    this.initLights();
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -21,7 +21,6 @@ XMLscene.prototype.init = function (application) {
     this.gl.depthFunc(this.gl.LEQUAL);
 
 	this.axis=new CGFaxis(this);
-	this.root = new Node();
 };
 
 XMLscene.prototype.initLights = function () {
@@ -33,12 +32,10 @@ XMLscene.prototype.initLights = function () {
     this.lights[0].update();
  
     this.shader.unbind();
-	console.log('ol');
-	console.log(this.lights);
 };
 
 XMLscene.prototype.initCameras = function () {
-    this.camera = new CGFcamera(0.4, 2.5, 500, vec3.fromValues(50, 50, 50), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
@@ -55,14 +52,11 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
 	this.lights[0].setVisible(true);
     this.lights[0].enable();
-
-	this.lights[1].setVisible(true);
-    this.lights[1].enable();
-
-	
+	//this.axis = this.graph.scene.axis;
+	//console.log(this.graph.scene)
+	//this.axis.draw(); 
 	this.setAmbient(this.graph.ambient[0],this.graph.ambient[1],this.graph.ambient[2],this.graph.ambient[3]);
-	//this.camera = this.graph.camera; 
-
+	
 	
 };
 
@@ -93,36 +87,9 @@ XMLscene.prototype.display = function () {
 	// This is one possible way to do it
 	if (this.graph.loadedOk)
 	{
-		nlights = this.lights.length;
-		for (i = 0; i < nlights; i++)
-			this.lights[i].update();
-		
+		this.lights[0].update();
 	};	
 
     this.shader.unbind();
 };
 
-
-//Novas Funções
-XMLscene.prototype.addLight = function(newLight, i){
-	this.shader.bind();
-	
-	this.lights[i] = newLight;
-	this.lights[i].setVisible(true);
-	this.lights[i].update();
-
-	this.shader.unbind();
-}
-
-function makeIdentity(n) {
-    return Array.apply(null, new Array(n)).map(function(x, i, a) { return a.map(function(y, k) { return i === k ? 1 : 0; }) });
-}
-
-var Node = function(){
-	this.children = [];
-	this.localTransformations = makeIdentity(4);
-
-}
-
-Node.prototype = Object.create(Node.prototype);
-Node.prototype.constructor = Node;
