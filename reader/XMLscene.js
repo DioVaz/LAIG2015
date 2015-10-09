@@ -102,7 +102,7 @@ XMLscene.prototype.display = function () {
     this.shader.unbind();
 };
 
-XMLscene.prototype.addNode(node)
+//XMLscene.prototype.addNode(node);
 //Novas Funções
 XMLscene.prototype.addLight = function(newLight, i){
 	this.shader.bind();

@@ -224,66 +224,10 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 	for (i = 1; i < nnodes; i++) { 
 		node = tempNodes[0].children[i];
 	
-		a = node.getAttribute('MATERIAL);
-		console.log(a);
-		
-		//material = node.getElementsByTagName('MATERIAL');
-		//texture = node.getElementsByTagName('TEXTURE');
-		//a = this.reader.getString(node, 'MATERIAL');
+		//a = node.getAttribute('MATERIAL);
 		//console.log(a);
 		
-
-	
 		
-	
-		/*
-		n_light = this.scene.lights[i];
-
-		if(this.reader.getBoolean(tempEnable[0],'value'))
-			n_light.enable();
-		else
-			n_light.disable();
-		
-		//position
-		var position = light.getElementsByTagName('position');
-		var x = this.reader.getFloat(position[0], 'x');
-		var y = this.reader.getFloat(position[0], 'y');
-		var z = this.reader.getFloat(position[0], 'z');
-		var w = this.reader.getFloat(position[0], 'w');
-		
-		n_light.setPosition(x,y,z,w);
-		
-		//ambient
-		var ambient = light.getElementsByTagName('ambient');
-		var r = this.reader.getFloat(ambient[0], 'r');
-		var g = this.reader.getFloat(ambient[0], 'g');
-		var b = this.reader.getFloat(ambient[0], 'b');
-		var a = this.reader.getFloat(ambient[0], 'a');
-		
-		n_light.setAmbient(r,g,b,a);
-		
-		//diffuse
-		var diffuse = light.getElementsByTagName('diffuse');
-		r = this.reader.getFloat(diffuse[0], 'r');
-		g = this.reader.getFloat(diffuse[0], 'g');
-		b = this.reader.getFloat(diffuse[0], 'b');
-		a = this.reader.getFloat(diffuse[0], 'a');
-		
-		n_light.setDiffuse(r,g,b,a);
-		
-		//specular
-		var specular = light.getElementsByTagName('specular');
-		r = this.reader.getFloat(specular[0], 'r');
-		g = this.reader.getFloat(specular[0], 'g');
-		b = this.reader.getFloat(specular[0], 'b');
-		a = this.reader.getFloat(specular[0], 'a');
-		
-		n_light.setSpecular(r,g,b,a);
-		
-		console.log(n_light);
-		this.scene.addLight(n_light, i);
-		
-	*/
 		
 	}
 
