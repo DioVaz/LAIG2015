@@ -1,4 +1,3 @@
-
 function XMLscene() {
     CGFscene.call(this);
 }
@@ -12,7 +11,7 @@ XMLscene.prototype.init = function (application) {
     this.initCameras();
 
   //  this.initLights();
-
+	
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
     this.gl.clearDepth(100.0);
@@ -20,8 +19,13 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
+	
 	this.axis=new CGFaxis(this);
-	this.root = new Node();
+	this.root = "null";
+	this.graphNodes = new Map();
+	this.textures = new Map();
+	this.materials = new Map();
+	
 };
 
 XMLscene.prototype.initLights = function () {
@@ -33,8 +37,6 @@ XMLscene.prototype.initLights = function () {
     this.lights[0].update();
  
     this.shader.unbind();
-	console.log('ol');
-	console.log(this.lights);
 };
 
 XMLscene.prototype.initCameras = function () {
@@ -58,12 +60,11 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	this.lights[1].setVisible(true);
     this.lights[1].enable();
-
-	
 	this.setAmbient(this.graph.ambient[0],this.graph.ambient[1],this.graph.ambient[2],this.graph.ambient[3]);
-	//this.camera = this.graph.camera; 
-
 	
+	this.cyl = new MyCylinder(this, 10, 5, 5,200, 200);
+	
+
 };
 
 XMLscene.prototype.display = function () {
@@ -77,12 +78,22 @@ XMLscene.prototype.display = function () {
 	// Initialize Model-View matrix as identity (no transformation
 	this.updateProjectionMatrix();
     this.loadIdentity();
+	
+	
+	this.multMatrix(this.graph.startMatrix);
+	
+	//this.applyViewMatrix();
+	this.update();
 
 	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
 
 	// Draw axis
 	this.axis.display();
+
+	this.cyl.display();
+	
+
 
 	this.setDefaultAppearance();
 	
@@ -97,13 +108,31 @@ XMLscene.prototype.display = function () {
 		for (i = 0; i < nlights; i++)
 			this.lights[i].update();
 		
-	};	
-
-    this.shader.unbind();
+	};
+	 
 };
 
-//XMLscene.prototype.addNode(node);
-//Novas Funções
+XMLscene.prototype.setRoot = function(id, iMatrix){
+	
+	this.initalMatrix = iMatrix;
+	this.root = id;
+	
+};
+
+XMLscene.prototype.addNode = function(id, newNode){
+	
+	this.graphNodes[id] = newNode; //confirmar se ja existe no -----------------------------------
+	
+};
+
+XMLscene.prototype.addTexture = function(newTexture, id){
+	this.textures[id] = newTexture;
+};
+
+XMLscene.prototype.addMaterial = function(newMaterial, id){
+	this.materials[id] = newMaterial;
+};
+
 XMLscene.prototype.addLight = function(newLight, i){
 	this.shader.bind();
 	
@@ -112,19 +141,17 @@ XMLscene.prototype.addLight = function(newLight, i){
 	this.lights[i].update();
 
 	this.shader.unbind();
-}
+};
 
-function makeIdentity(n) {
-    return Array.apply(null, new Array(n)).map(function(x, i, a) { return a.map(function(y, k) { return i === k ? 1 : 0; }) });
-}
+XMLscene.prototype.processGraph = function (){
+
+	
+		
+};
 
 
 
-var Node = function(){
-	this.children = [];
-	this.localTransformations = makeIdentity(4);
 
-}
 
-Node.prototype = Object.create(Node.prototype);
-Node.prototype.constructor = Node;
+
+

@@ -11,7 +11,15 @@ function getUrlVars() {
     return vars;
 }	 
 
-serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 
+serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js','Node.js', 'SceneTexture.js',
+'../primitives/MyCylinder.js',
+'../primitives/MyCylinderBody.js',
+'../primitives/MyFullCylinder.js',
+'../primitives/MyCircle.js',
+'../primitives/MySphere.js',
+
+ 'CanvasMatrix.js',
+
 
 main=function()
 {
@@ -35,6 +43,7 @@ main=function()
 	// create and load graph, and associate it to scene. 
 	// Check console for loading errors
 
+	console.log(filename);
 	var myGraph = new MySceneGraph(filename, myScene);
 	
 	// start

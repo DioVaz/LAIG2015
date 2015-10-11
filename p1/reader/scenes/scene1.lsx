@@ -1,18 +1,18 @@
 <SCENE>
 
 <INITIALS>
-    <frustum near="2.5" far="500.0"/>                      <!-- frustum planes-->
-    <translation x="0" y="0" z="0" />                 <!-- initial translate -->
+    <frustum near="-10" far="500.0"/>                      <!-- frustum planes-->
+    <translation x="" y="0" z="0" />                 <!-- initial translate -->
     <rotation axis="x" angle="0" />                  <!-- initial rotation 3 -->
     <rotation axis="y" angle="0" />                  <!-- initial rotation 2 -->
     <rotation axis="z" angle="0" />                  <!-- initial rotation 1 -->
-    <scale sx="0" sy="0" sz="0" />                  <!-- initial scaling -->
-    <reference length="10" />                          <!-- axis length; "0" means no axis-->
+    <scale sx="1" sy="1" sz="1" />                  <!-- initial scaling -->
+    <reference length="20" />                          <!-- axis length; "0" means no axis-->
 
 </INITIALS>
 
 <ILLUMINATION>
-    <ambient r="1" g="1" b="1" a="0" />            <!-- global ambient -->
+    <ambient r="1" g="1" b="1" a="1" />            <!-- global ambient -->
     <background r="0" g="0" b="0.1" a="1.0" />         <!-- background color -->
 </ILLUMINATION>
 
@@ -20,17 +20,17 @@
 <LIGHTS>
     <LIGHT id="luz1">                                    <!-- light identifier -->
         <enable value ="1" />                         <!-- enable/disable -->
-        <position x="6" y="8.5" z="0" w="1" />       <!-- light position -->
-        <ambient r="0" g="0" b="0" a="1" />        <!-- ambient component -->
-        <diffuse r="1" g="1" b="1" a="1" />        <!-- diffuse component -->
-        <specular r="1" g="1" b="1" a="1" />       <!-- specular component -->
+        <position x="0" y="0" z="0" w="1" />       <!-- light position -->
+        <ambient r="1" g="1" b="1" a="1" />        <!-- ambient component -->
+        <diffuse r="0" g="0" b="0" a="0" />        <!-- diffuse component -->
+        <specular r="0" g="0" b="0" a="0" />       <!-- specular component -->
     </LIGHT>
 	<LIGHT id="luz2">                                    <!-- light identifier -->
         <enable value ="1" />                         <!-- enable/disable -->
-        <position x="5" y="2.5" z="0" w="1" />       <!-- light position -->
-        <ambient r="1" g="0" b="0" a="1" />        <!-- ambient component -->
-        <diffuse r="1" g="1" b="1" a="1" />        <!-- diffuse component -->
-        <specular r="1" g="1" b="1" a="1"  />       <!-- specular component -->
+        <position x="0" y="0" z="0" w="1" />       <!-- light position -->
+        <ambient r="1" g="1" b="1" a="1" />        <!-- ambient component -->
+        <diffuse r="0" g="0" b="0" a="0" />        <!-- diffuse component -->
+        <specular r="0" g="0" b="0" a="0"  />       <!-- specular component -->
     </LIGHT>
 
     <!-- NOTE: this block "LIGHT" must be repeated as necessary with different "id" -->
@@ -40,10 +40,61 @@
 
 
 <TEXTURES>
-    <TEXTURE id="ss">
-        <file path="ss" />                             <!-- path to file -->
-        <amplif_factor s="ff" t="ff" />                <!-- x/s, y/t -->
+    <TEXTURE id="Cylinder_wall">
+        <file path="/textures/Cylinder_wall.png" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
+	
+	<TEXTURE id="Grass_01">
+        <file path="/textures/Grass_01.png" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+    </TEXTURE>
+	
+	<TEXTURE id="Grass_02">
+        <file path="/textures/Grass_02.png" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+    </TEXTURE>
+	
+	<TEXTURE id="Grass_03">
+        <file path="/textures/Grass_03.png" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+    </TEXTURE>
+	
+	<TEXTURE id="Grass_04">
+        <file path="/textures/Grass_04.png" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+    </TEXTURE>
+	
+	<TEXTURE id="Grass_05">
+        <file path="/textures/Grass_05.png" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+    </TEXTURE>
+	
+	<TEXTURE id="leafs_01">
+        <file path="/textures/leafs_01.png" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+    </TEXTURE>
+	
+	<TEXTURE id="leafs_02">
+        <file path="/textures/leafs_02.png" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+    </TEXTURE>
+	
+	<TEXTURE id="leafs_03">
+        <file path="/textures/leafs_03.png" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+    </TEXTURE>
+
+	<TEXTURE id="wood_01">
+        <file path="/textures/wood_01.png" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+    </TEXTURE>
+	
+	<TEXTURE id="wood_02">
+        <file path="/textures/wood_02.png" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+    </TEXTURE>
+	
 
     <!-- NOTE: this block "TEXTURE" must be repeated as necessary with different "id" -->
     
@@ -51,7 +102,7 @@
 
 
 <MATERIALS>
-    <MATERIAL id="ss">                                  
+    <MATERIAL id="groundFloor">                                  
         <shininess value="ff" />
         <specular r="ff" g="ff" b="ff" a="ff" />        <!-- specular reflection -->
         <diffuse r="ff" g="ff" b="ff" a="ff" />         <!-- diffuse reflection -->
@@ -68,9 +119,9 @@
 
     <!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
     <LEAF id="idRectangle" type="rectangle" args="0 1 1 0" />
-    <LEAF id="idCylinder" type="cylinder" args="ff ff ff ii ii" /> 
+    <LEAF id="idCylinder" type="cylinder" args="1 1 1 ii ii" /> 
     <LEAF id="idSphere" type="sphere" args="ff ii ii" />
-    <LEAF id="idTriangle" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
+    <LEAF id="idTriangle" type="triangle" args="0 0 0  0 0 0  0 0 0" />
 
     <!-- Parameters of the above primitives:                                                         -->
         <!--rectangle: 2D coordinates for left-top and right-bottom vertices.                        -->
@@ -86,6 +137,30 @@
     <ROOT id="idRoot" />     <!-- identifier of root node of the scene graph; this node     -->
                          <!--   must be defined in one of the following NODE declarations -->
 
+						 
+	<NODE id="idRoot">       <!--   defines one intermediate node; may be repeated as necessary -->
+
+        <!-- next two lines are mandatory -->
+        <MATERIAL id="floor" />      <!-- declared material superimposes the material received from parent node -->
+                                  <!-- id="null" maintains material from parent node        -->
+        <TEXTURE id="clear" />       <!-- declared texture superimposes the texture received from parent node -->
+                                  <!-- id="null" maintains texture from parent node       -->
+                                  <!-- id="clear" clears texture declaration received from parent node      -->
+
+
+        <!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
+        <TRANSLATION x="0" y="0" z="0" />
+        <ROTATION axis="x" angle="0" />
+        <SCALE sx="1" sy="1" sz="1" />
+
+
+        <!-- declaring descendents, ate least one node or one leaf must be present -->
+        <DESCENDANTS>
+            <DESCENDANT id="idCylinder" />       <!-- "ss" is the identifier of a node or of leaf; -->
+        </DESCENDANTS>
+
+    </NODE>
+    
     <NODE id="groundFloor">       <!--   defines one intermediate node; may be repeated as necessary -->
 
         <!-- next two lines are mandatory -->
