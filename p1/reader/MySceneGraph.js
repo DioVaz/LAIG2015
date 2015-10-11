@@ -1,4 +1,4 @@
-var degToRad = Math.PI / 180;
+var deg2rad = Math.PI / 180;
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
 	
@@ -75,6 +75,8 @@ MySceneGraph.prototype.onXMLReady=function()
 MySceneGraph.prototype.parseInitials = function(rootElement) {
 	
 	this.scene.loadIdentity();
+	this.matrixIdentity = this.scene.getMatrix();
+
 	//<INITIALS>
 	var elems =  rootElement.getElementsByTagName('INITIALS');
 	if (elems == null) {
@@ -91,41 +93,8 @@ MySceneGraph.prototype.parseInitials = function(rootElement) {
 
 	var near = this.reader.getFloat(frust, 'near');
 	var far = this.reader.getFloat(frust, 'far');
- 	
- 	//scale
- 	var scale = elems[0].children[5];
- 	var sx = this.reader.getFloat(scale,'sx');
- 	var sy = this.reader.getFloat(scale,'sy');
- 	var sz = this.reader.getFloat(scale,'sz');
-	this.scene.scale(sx, sy, sz);
-	
-		//<rotation3>
-	var rotation3 = elems[0].children[2];
-	
-	var taxis3 = rotation3.getAttribute('axis');
-	var angleDegree = rotation3.getAttribute('angle');
-	var angleRad = degToRad*angleDegree;
-	this.scene.rotate(angleRad, 1, 0,0);
-		
-	//<rotation2>
-	var rotation2=elems[0].children[3];
-	
-	var taxis2 = rotation2.getAttribute('axis');
-	angleDegree = rotation2.getAttribute('angle');
-	angleRad = degToRad*angleDegree;
-	
-	this.scene.rotate(angleRad, 0,1,0);
-
-	//<rotation1>
-	var rotation1=elems[0].children[4];
-
-	var taxis1 = rotation1.getAttribute('axis');
-	angleDegree = rotation1.getAttribute('angle');
-	
-	var angleRad = degToRad*angleDegree;
-	
-	this.scene.rotate(angleRad, 0,0,1);
-	
+ 
+ 		
 	
 	//<translate>
 	var translate = elems[0].children[1];
@@ -133,16 +102,49 @@ MySceneGraph.prototype.parseInitials = function(rootElement) {
 	var tX = translate.getAttribute('x');
 	var tY = translate.getAttribute('y');
 	var tZ = translate.getAttribute('z');
-	
+
 	this.scene.translate(tX, tY, tZ);
+	
 
 
+	//<rotation3>
+	var rotation3 = elems[0].children[2];
+	
+	var taxis3 = rotation3.getAttribute('axis');
+	var angleDegree = rotation3.getAttribute('angle');
+	var angleRad = deg2rad*angleDegree;
+	this.scene.rotate(angleRad, 1, 0,0);
+	
+
+	//<rotation2>
+	var rotation2=elems[0].children[3];
+	
+	var taxis2 = rotation2.getAttribute('axis');
+	angleDegree = rotation2.getAttribute('angle');
+	angleRad = deg2rad*angleDegree;
+
+	this.scene.rotate(angleRad, 0,1,0);
+
+	//<rotation1>
+	var rotation1=elems[0].children[4];
+	var taxis1 = rotation1.getAttribute('axis');
+	angleDegree = rotation1.getAttribute('angle');
+	var angleRad = deg2rad*angleDegree;
+	this.scene.rotate(angleRad, 0,0,1);
+
+ 	//scale
+ 	var scale = elems[0].children[5];
+ 	var sx = this.reader.getFloat(scale,'sx');
+ 	var sy = this.reader.getFloat(scale,'sy');
+ 	var sz = this.reader.getFloat(scale,'sz');
+	
+	
+	this.scene.scale(sx,sy,sz);
 
 
 	this.startMatrix = this.scene.getMatrix();
-	console.log(this.startMatrix);
-
-	this.camera = new CGFcamera(0.4, near, far, vec3.fromValues(25, 25, 25), vec3.fromValues(0, 0, 0));
+	
+	this.camera = new CGFcamera(0.4, near, far, vec3.fromValues(100, 100, 100), vec3.fromValues(0, 0, 0));
 
 	//<reference>
 	var axis_length = this.reader.getFloat(elems[0].children[6],'length');
@@ -422,6 +424,8 @@ MySceneGraph.prototype.parseLeaves = function(rootElement){
 
 MySceneGraph.prototype.parseNodes = function(rootElement){
 
+	console.log('ParseNodes')
+
 	  var tempNodes = rootElement.getElementsByTagName('NODES');
 
 	  var nnodes=tempNodes[0].children.length;
@@ -431,48 +435,62 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 	  id = root.getAttribute('id');
 	  this.scene.setRoot(id, this.startMatrix);
 	  //Other Nodes
-	  for (i = 1; i < nnodes; i++) {
-		node = tempNodes[0].children[i];
-		a = node.getAttribute('id');
-		//<MATERIAL>
-		var material = node.getElementsByTagName('MATERIAL');
-		var materialID = material[0].getAttribute('id');
 
-		// <TEXTURE id="ss" />
-		var texture = node.getElementsByTagName('TEXTURE');
-		var textureID = texture[0].getAttribute('id');
+		var nodes = tempNodes[0].getElementsByTagName('NODE');
 
-		//<TRANSLATION x="ff" y="ff" z="ff" />
-		var translation = node.getElementsByTagName('TRANSLATION');
-		var X = translation[0].getAttribute('x');
-		var Y = translation[0].getAttribute('y');
-		var Z = translation[0].getAttribute('z');
+    	for (i = 0; i < nodes.length; i++) {
+			var node = new Node(nodes[i].getAttribute('id'), this.matrixIdentity);
+			node.material = this.reader.getString(nodes[i].getElementsByTagName('MATERIAL')[0], 'id');
+			node.texture = this.reader.getString(nodes[i].getElementsByTagName('TEXTURE')[0], 'id');
 
-		//<ROTATION axis="cc" angle="ff" />
-		var rotation = node.getElementsByTagName('ROTATION');
-		var axis = rotation[0].getAttribute('axis');
-		var angle = rotation[0].getAttribute('angle');
+        // Transforms
+        var children = nodes[i].children;
+        for (j = 0; j < children.length; j++) {
+            switch(children[j].tagName) {
+            case "TRANSLATION":
+                var trans = [];
+                trans.push(this.reader.getFloat(children[j], "x"));
+                trans.push(this.reader.getFloat(children[j], "y"));
+                trans.push(this.reader.getFloat(children[j], "z"));
+                // console.log("trans: " + trans);
+                mat4.translate(node.localTransformations, node.localTransformations, trans);
+                break;
+            case "SCALE":
+                var scale = [];
+                scale.push(this.reader.getFloat(children[j], "sx"));
+                scale.push(this.reader.getFloat(children[j], "sy"));
+                scale.push(this.reader.getFloat(children[j], "sz"));
+                // console.log("scale: " + scale);
+                mat4.scale(node.localTransformations, node.localTransformations, scale);
+                break;
+            case "ROTATION":
+                var axis = this.reader.getItem(children[j], "axis", ["x", "y", "z"]);
+                var angle = this.reader.getFloat(children[j], "angle") * deg2rad;
+                var rot = [0, 0, 0];
 
-		//<SCALE sx="ff" sy="ff" sz="ff" />
-		var scale = node.getElementsByTagName('SCALE');
-		var sX = scale[0].getAttribute('sx');
-		var sY = scale[0].getAttribute('sy');
-		var sZ = scale[0].getAttribute('sz');
+                // console.log("rot: " + axis + " " + angle + " ");
+                rot[["x", "y", "z"].indexOf(axis)] = 1;
+                mat4.rotate(node.localTransformations, node.localTransformations, angle, rot);
+                break;
+            }
+        }
 
-		//<DESCENDANTS>
-		var tempDescendants = node.getElementsByTagName('DESCENDANTS');
+        //Descendants
+        var desc = nodes[i].getElementsByTagName('DESCENDANTS')[0];
+        if (desc == null) return "No <DESCENDANTS> tag found";
 
-		var nDescendants=tempDescendants[0].children.length;
+        var tempDescendants = desc.getElementsByTagName('DESCENDANT');
+        if (tempDescendants.length < 1) return "Need at least 1 <DESCENDANT>";
+
+		var nDescendants = tempDescendants.length;
 		var descendants = new Array();
-		//Other Descendants
-		for (j = 0; j < nDescendants; j++) {
-		  elem = tempDescendants[0].children[j];
-			
-		  //<DESCENDANT>
-		  descID = elem.getAttribute('id');
-		  descendants[j] = descID;
+        for (j = 0; j < nDescendants; j++) {
+            descID = tempDescendants[j].getAttribute('id');
+		  	descendants[j] = descID;
+        }
+        node.children = descendants;
+        console.log(node);
 
-		}
 	  }
 }
   

@@ -40,7 +40,7 @@ XMLscene.prototype.initLights = function () {
 };
 
 XMLscene.prototype.initCameras = function () {
-    this.camera = new CGFcamera(0.4, 2.5, 500, vec3.fromValues(50, 50, 50), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(0.4, 2.5, 500, vec3.fromValues(100, 100, 100), vec3.fromValues(0, 0, 0));
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
@@ -91,8 +91,8 @@ XMLscene.prototype.display = function () {
 	// Draw axis
 	this.axis.display();
 
-	this.cyl.display();
-	
+//	this.cyl.display();
+//	this.cyl.scene.multMatrix(this.graph.startMatrix);
 
 
 	this.setDefaultAppearance();

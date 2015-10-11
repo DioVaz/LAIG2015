@@ -1,6 +1,6 @@
 var Node = function(newId, transformationsMatrix){
-	this.children = new Map();
-	this.localTransformations =transformationsMatrix;
+	this.children = new Array();
+	this.localTransformations = transformationsMatrix;
 	this.id = newId;
 
 };
