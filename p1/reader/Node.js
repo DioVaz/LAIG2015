@@ -5,9 +5,13 @@ var Node = function(newId, transformationsMatrix){
 
 };
 
+
+Node.prototype = Object.create(Node.prototype);
+Node.prototype.constructor = Node;
+
+
 Node.prototype.setId = function(newId){
 	this.id = newId;
 }
 
-Node.prototype = Object.create(Node.prototype);
-Node.prototype.constructor = Node;
+

@@ -11,7 +11,13 @@ function getUrlVars() {
     return vars;
 }	 
 
-serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js','Node.js', 'SceneTexture.js',
+serialInclude(['../lib/CGF.js', 'LSXReader.js','XMLscene.js', 'MySceneGraph.js','Node.js',
+'Leaf.js',
+'LeafRectangle.js',
+'LeafCylinder.js',
+'LeafSphere.js',
+'LeafTriangle.js',
+'SceneTexture.js',
 '../primitives/MyCylinder.js',
 '../primitives/MyCylinderBody.js',
 '../primitives/MyCircle.js',

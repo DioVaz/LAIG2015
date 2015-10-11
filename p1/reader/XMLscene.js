@@ -22,9 +22,14 @@ XMLscene.prototype.init = function (application) {
 	
 	this.axis=new CGFaxis(this);
 	this.root = "null";
+	this.defaultTexture;
+	this.defaultMaterial;
+	this.leaves = new Map();
 	this.graphNodes = new Map();
 	this.textures = new Map();
 	this.materials = new Map();
+	this.stackTexture;
+	this.stackMaterial;
 	
 };
 
@@ -119,6 +124,12 @@ XMLscene.prototype.setRoot = function(id, iMatrix){
 	
 };
 
+XMLscene.prototype.addLeaf = function(id, newLeaf){
+
+	this.leaves[id] = newLeaf;
+
+}
+
 XMLscene.prototype.addNode = function(id, newNode){
 	
 	this.graphNodes[id] = newNode; //confirmar se ja existe no -----------------------------------
@@ -143,14 +154,35 @@ XMLscene.prototype.addLight = function(newLight, i){
 	this.shader.unbind();
 };
 
-XMLscene.prototype.processGraph = function (){
+XMLscene.prototype.processGraphInit = function (){
 
-	
-		
+	if(this.root == 'null'){
+		console.log('Root not defined')
+		return;
+	}
+	rootNode = this.graphNodes[this.root];
+
+	this.processGraph(rootNode, this.getMatrix());
+
 };
 
+XMLscene.prototype.processGraph = function (parentNode, transformations){
 
+	var children = parentNode.children;
+ 	
+ 	var nChildren = children.length
+	
+	//Case of leaf
+ 	if(nChildren == 0){
+ 		processLeaf(parentNode, transformations, texture, material)
+ 	}
+ 	else{
+ 		for(i = 0; i < nChildren; i++){
 
+ 		}
+ 	}
+
+}
 
 
 

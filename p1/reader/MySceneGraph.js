@@ -7,7 +7,7 @@ function MySceneGraph(filename, scene) {
 	scene.graph=this;
 		
 	// File reading 
-	this.reader = new CGFXMLreader();
+	 this.reader = new LSXReader();
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -54,6 +54,14 @@ MySceneGraph.prototype.onXMLReady=function()
 		this.onXMLError(error);
 		return;
 	}
+
+	error = this.parseLeaves(rootElement);
+
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+
 	
 	error = this.parseNodes(rootElement);
 
@@ -267,6 +275,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement){
   for(nTextures=0; nTextures<tTextures.length; nTextures++){
     var IDtexture = tTextures[nTextures].getAttribute("id");
     console.log(IDtexture);
+    
     //<file path="ss" />                             <!-- path to file -->
     var tPath=tTextures[nTextures].children[0].getAttribute("path");
         //<amplif_factor s="ff" t="ff" />                <!-- x/s, y/t -->
@@ -351,73 +360,49 @@ MySceneGraph.prototype.parseMaterials = function(rootElement){
 }
 
 
-
 MySceneGraph.prototype.parseLeaves = function(rootElement){
-  //<LEAVES>
+  	//<LEAVES>
 	  var tempLeaves = rootElement.getElementsByTagName('LEAVES');
 	  var nLeaves=tempLeaves[0].children.length;
 	  for (i = 0; i < nLeaves; i++) {
-		var leave = tempLeaves[0].children[i];
-		var idLeave = leave.getAttribute('id');
-		var typeLeave = leave.getAttribute('type');
-		var argsLeave;
+			var leaf = tempLeaves[0].children[i];
+			
+			var idLeaf = this.reader.getString(leaf, 'id');
+	
+			var typeLeaf =  this.reader.getString(leaf, 'type');
+			var argsLeaf;
 
-    //<LEAF id="idRectangle" type="rectangle" args="0 1 1 0" />
-		if(typeLeave=="rectangle"){
-			  argsLeave = leave.getAttribute('args');
-			  var res = str.split(" ");
-			  //left-top
-			  var leftTopX = res[0];
-			  var leftTopY = res[1];
-			  //left-bot
-			  var leftBotX = res[2];
-			  var leftBotY = res[3];
-		}
+    
+    	switch(typeLeaf){
+    		//<LEAF id="idRectangle" type="rectangle" args="0 1 1 0" />
+    		case "rectangle":
+				argsLeaf = this.reader.getRectangle(leaf, "args");
+				newLeaf = new LeafRectangle(idLeaf, argsLeaf[0], argsLeaf[1], argsLeaf[2], argsLeaf[3]);
+				this.scene.addLeaf(idLeaf, newLeaf);
+				break;
+			//<LEAF id="idCylinder" type="cylinder" args="ff ff ff ii ii" />
+			case "cylinder":
+				argsLeaf = this.reader.getCylinder(leaf, "args");
+				newLeaf = new LeafCylinder(idLeaf, argsLeaf[0], argsLeaf[1], argsLeaf[2], argsLeaf[3], argsLeaf[4]);
+				this.scene.addLeaf(idLeaf, newLeaf);
+				break;
+			//<LEAF id="idSphere" type="sphere" args="ff ii ii" />
+			case "sphere":
+				argsLeaf = this.reader.getSphere(leaf, "args");
+				newLeaf = new LeafSphere(idLeaf, argsLeaf[0], argsLeaf[1], argsLeaf[2]);
+				this.scene.addLeaf(idLeaf, newLeaf);
+				break;
+			//<LEAF id="idTriangle" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
+			case "triangle":
+				argsLeaf = this.reader.getTriangle(leaf, "args");
+				newLeaf = new LeafTriangle(idLeaf, argsLeaf[0], argsLeaf[1], argsLeaf[2], argsLeaf[3], 
+				argsLeaf[4], argsLeaf[5], argsLeaf[6], argsLeaf[7], argsLeaf[8]);
+				this.scene.addLeaf(idLeaf, newLeaf);
+				break;
+			default:
+				return "Unknown LEAF type: " + typeLeaf;
+    	}
 
-    //<LEAF id="idCylinder" type="cylinder" args="ff ff ff ii ii" />
-		if(typeLeave=="cylinder"){
-			  argsLeave = leave.getAttribute('args');
-			  var res = str.split(" ");
-			  //height
-			  var height = res[0];
-			  //bottom radius
-			  var bottomRadius = res[1];
-			  //top radius
-			  var topRadius = res[2];
-			  //sections
-			  var sections = res[3];
-			  //parts
-			  var parts = res[4];
-		}
-
-    //<LEAF id="idSphere" type="sphere" args="ff ii ii" />
-		if(typeLeave=="sphere"){
-			  argsLeave = leave.getAttribute('args');
-			  //radius
-			  var radius = res[0];
-			  //parts radius
-			  var partsR = res[1];
-			  //parts section
-			  var partsS = res[2];
-		}
-
-		//<LEAF id="idTriangle" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
-		if(typeLeave=="triangle"){
-			  argsLeave = leave.getAttribute('args');
-			  var res = str.split(" ");
-			  //vertex a
-			  var aX = res[0];
-			  var aY = res[1];
-			  var aZ = res[2];
-			  //vertex b
-			  var bX = res[3];
-			  var bY = res[4];
-			  var bZ = res[5];
-			  //vertex c
-			  var cX = res[6];
-			  var cY = res[7];
-			  var cZ = res[8];
-		}
 	}
 }
 
@@ -489,8 +474,6 @@ MySceneGraph.prototype.parseNodes = function(rootElement){
 		  	descendants[j] = descID;
         }
         node.children = descendants;
-        console.log(node);
-
 	  }
 }
   
