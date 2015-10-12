@@ -101,6 +101,8 @@ XMLscene.prototype.display = function () {
 
 
 	this.setDefaultAppearance();
+
+	//this.processGraphInit();
 	
 	// ---- END Background, camera and axis setup
 
@@ -109,6 +111,7 @@ XMLscene.prototype.display = function () {
 	// This is one possible way to do it
 	if (this.graph.loadedOk)
 	{
+		this.processGraphInit();
 		nlights = this.lights.length;
 		for (i = 0; i < nlights; i++)
 			this.lights[i].update();
@@ -121,18 +124,21 @@ XMLscene.prototype.setRoot = function(id, iMatrix){
 	
 	this.initalMatrix = iMatrix;
 	this.root = id;
-	
+
 };
 
 XMLscene.prototype.addLeaf = function(id, newLeaf){
 
 	this.leaves[id] = newLeaf;
 
+
 }
 
 XMLscene.prototype.addNode = function(id, newNode){
 	
 	this.graphNodes[id] = newNode; //confirmar se ja existe no -----------------------------------
+
+
 	
 };
 
@@ -161,26 +167,34 @@ XMLscene.prototype.processGraphInit = function (){
 		return;
 	}
 	rootNode = this.graphNodes[this.root];
-
+	//this.stackTexture.push(this.defaultTexture);
+	//this.stackMaterial.push(this.defaultMaterial);
+	
 	this.processGraph(rootNode, this.getMatrix());
 
 };
 
 XMLscene.prototype.processGraph = function (parentNode, transformations){
 
+	
 	var children = parentNode.children;
  	
  	var nChildren = children.length
-	
-	//Case of leaf
- 	if(nChildren == 0){
- 		processLeaf(parentNode, transformations, texture, material)
- 	}
- 	else{
- 		for(i = 0; i < nChildren; i++){
 
- 		}
+ 	for(i = 0; i < nChildren; i++){
+ 			newID = children[i];
+ 			if(newID in this.leaves){
+
+ 			}
+ 			else{
+ 				newParent = this.graphNodes[newID];
+ 				//transformations.multMatrix(newParent.localTransformations);
+ 				this.processGraph(newParent,transformations);
+ 			}
+		
+			
  	}
+ 
 
 }
 
