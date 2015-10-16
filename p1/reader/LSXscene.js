@@ -9,7 +9,7 @@ LSXscene.prototype.constructor = LSXscene;
 
 LSXscene.prototype.init = function(application) {
     CGFscene.prototype.init.call(this, application);
-
+      this.myinterface = null;
     this.initCameras();
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -23,12 +23,17 @@ LSXscene.prototype.init = function(application) {
     this.materials = [];
     this.leaves = [];
     this.nodes = [];
-
+    
     this.axis = new CGFaxis(this);
+    this.lightsEnabled = [];
 };
 
+LSXscene.prototype.setInterface = function(myInterface) {
+	this.myInterface = myInterface;
+}
+
 LSXscene.prototype.initCameras = function() {
-    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(100, 100, 100), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(50, 80, 130), vec3.fromValues(0, 0, 0));
 };
 
 LSXscene.prototype.setDefaultAppearance = function() {
@@ -62,6 +67,9 @@ LSXscene.prototype.onGraphLoaded = function() {
      * Lights
      */
     this.initLights();
+
+
+   this.myInterface.onGraphLoaded();
 
     /*
      * Textures
@@ -140,18 +148,8 @@ LSXscene.prototype.display = function() {
             node.primitive.display();
             this.popMatrix();
         }
-        // this.pushMatrix();
-
-        // this.translate(4, 0, 4);
-        // for (i = 0; i < this.leaves.length; i++) {
-        //     this.leaves[i].display();
-        //     this.translate(0, 0.25, 0);
-        // }
-
-        // this.popMatrix();
 
     };
-
     this.shader.unbind();
 };
 
@@ -197,6 +195,7 @@ LSXscene.prototype.initLights = function() {
         aux.update();
 
         this.lights[i] = aux;
+		this.lightsEnabled[this.lights[i].id] = this.lights[i].enabled;
     }
 
     this.shader.unbind();
@@ -235,10 +234,10 @@ LSXscene.prototype.initNodes = function() {
     var nodes_list = this.graph.nodes;
 
     var root_node = this.graph.findNode(this.graph.root_id);
-    this.DFS(root_node, root_node.material, root_node.texture, root_node.matrix);
+    this.Process(root_node, root_node.material, root_node.texture, root_node.matrix);
 };
 
-LSXscene.prototype.DFS = function(node, currMaterial, currTexture, currMatrix) {
+LSXscene.prototype.Process = function(node, currMaterial, currTexture, currMatrix) {
     var nextMat = node.material;
     if (node.material == "null") nextMat = currMaterial;
 
@@ -268,7 +267,7 @@ LSXscene.prototype.DFS = function(node, currMaterial, currTexture, currMatrix) {
             continue;
         }
 
-        this.DFS(nextNode, nextMat, nextTex, nextMatrix);
+        this.Process(nextNode, nextMat, nextTex, nextMatrix);
     }
 };
 
@@ -311,4 +310,15 @@ function SceneObject(id) {
     this.texture = null;
     this.matrix = null;
     this.primitive = null;
+}
+
+LSXscene.prototype.updateLight = function(lightId, enable) {
+	console.log("Changing light " + lightId);
+	for (var i = 0; i < this.graph.lights.length; ++i) {
+		if (this.lights[i].id == lightId) {
+			var light = this.lights[i];
+			enable ? light.enable() : light.disable();
+			return;
+		}
+	}
 }

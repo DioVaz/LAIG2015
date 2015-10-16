@@ -46,6 +46,7 @@ serialInclude(['../lib/CGF.js',
     'LSXscene.js',
     'MySceneGraph.js',
     'LSXParser.js',
+    'MyInterface.js',
     'primitives/MyCircle.js',
     'primitives/MyCylinder.js',
     'primitives/MyFullCylinder.js',
@@ -58,15 +59,17 @@ serialInclude(['../lib/CGF.js',
     main = function() {
         var app = new CGFapplication(document.body);
         var myScene = new LSXscene();
-        var myInterface = new CGFinterface();
-
+        myInterface = new MyInterface();
+        myInterface.setActiveCamera(myScene.camera);
+        myScene.setInterface(myInterface);
+          
         app.init();
 
         app.setScene(myScene);
         app.setInterface(myInterface);
 
-        myInterface.setActiveCamera(myScene.camera);
-
+      
+        
         var filename = getUrlVars()['file'] || "garden.lsx";
 
         var myGraph = new LSXParser(filename, myScene);

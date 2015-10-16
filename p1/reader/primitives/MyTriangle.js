@@ -23,7 +23,7 @@ MyTriangle.prototype.initBuffers = function() {
     ];
 
     // Get normals
-    var A = vec3.fromValues(this.x1-this.x2, this.y1-this.y2, this.z1-this.z2);
+	var A = vec3.fromValues(this.x1-this.x2, this.y1-this.y2, this.z1-this.z2);
 	  var B = vec3.fromValues(this.x1-this.x3, this.y1-this.y3, this.z1-this.z3);
 	  var N = vec3.create();
 	  vec3.cross(N, A, B);
