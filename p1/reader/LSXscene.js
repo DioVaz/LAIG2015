@@ -26,6 +26,7 @@ LSXscene.prototype.init = function(application) {
     
     this.axis = new CGFaxis(this);
     this.lightsEnabled = [];
+    this.allLights = "all";
 };
 
 LSXscene.prototype.setInterface = function(myInterface) {
@@ -198,6 +199,7 @@ LSXscene.prototype.initLights = function() {
 		this.lightsEnabled[this.lights[i].id] = this.lights[i].enabled;
     }
 
+	this.lightsEnabled[this.allLights] = true;
     this.shader.unbind();
 };
 
@@ -314,11 +316,22 @@ function SceneObject(id) {
 
 LSXscene.prototype.updateLight = function(lightId, enable) {
 	console.log("Changing light " + lightId);
-	for (var i = 0; i < this.graph.lights.length; ++i) {
-		if (this.lights[i].id == lightId) {
+	if(lightId != this.allLights){
+		console.log('entrei1');
+		for (var i = 0; i < this.graph.lights.length; ++i) {
+			if (this.lights[i].id == lightId) {
+				var light = this.lights[i];
+				enable ? light.enable() : light.disable();
+				return;
+			}
+		}
+	}else{
+		console.log('entrei2');
+		for (var i = 0; i < this.graph.lights.length; ++i) {	
 			var light = this.lights[i];
 			enable ? light.enable() : light.disable();
-			return;
+
 		}
+	
 	}
 }
