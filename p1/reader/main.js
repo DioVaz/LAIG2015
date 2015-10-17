@@ -60,7 +60,8 @@ serialInclude(['../lib/CGF.js',
         var app = new CGFapplication(document.body);
         var myScene = new LSXscene();
         myInterface = new MyInterface();
-        myInterface.setActiveCamera(myScene.camera);
+		myInterface.setScene(myScene);
+       
         myScene.setInterface(myInterface);
           
         app.init();
@@ -69,7 +70,7 @@ serialInclude(['../lib/CGF.js',
         app.setInterface(myInterface);
 
       
-        
+         myInterface.setActiveCamera(myScene.camera);
         var filename = getUrlVars()['file'] || "garden.lsx";
 
         var myGraph = new LSXParser(filename, myScene);
