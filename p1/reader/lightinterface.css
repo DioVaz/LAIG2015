@@ -2,6 +2,9 @@ div.dg.a{
   width: 119px!important;
 }
 
+.c{
+  text-align:center;
+}
 
 li.title{
   color:white;
@@ -31,7 +34,7 @@ li.title{
 .dg.main .close-button{
   background:#be9fba !important;
   width: 119px!important;
-  background: url(scenes/textures/Leaf_Floor_texture.png)!important;
+  background: url(scenes/textures/treeWood.png)!important;
   background-position: left top;
   background-repeat: repeat;
 }
