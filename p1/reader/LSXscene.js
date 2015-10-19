@@ -1,5 +1,10 @@
+//variable used to convert degrees to radians
 var deg2rad = Math.PI / 180;
 
+/**
+ * LSXscene calls CGFscene
+ * @constructor
+ */
 function LSXscene() {
     CGFscene.call(this);
 }
@@ -7,26 +12,31 @@ function LSXscene() {
 LSXscene.prototype = Object.create(CGFscene.prototype);
 LSXscene.prototype.constructor = LSXscene;
 
+/**
+ * init 
+ * @param application
+ */
 LSXscene.prototype.init = function(application) {
-    CGFscene.prototype.init.call(this, application);
-      this.myinterface = null;
-    this.initCameras();
+	CGFscene.prototype.init.call(this, application);
+	this.myinterface = null;
+	this.initCameras();
 
-    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-    this.gl.clearDepth(100.0);
-    this.gl.enable(this.gl.DEPTH_TEST);
-    this.gl.enable(this.gl.CULL_FACE);
-    this.gl.depthFunc(this.gl.LEQUAL);
+	this.gl.clearDepth(100.0);
+	this.gl.enable(this.gl.DEPTH_TEST);
+	this.gl.enable(this.gl.CULL_FACE);
+	this.gl.depthFunc(this.gl.LEQUAL);
 
-    this.textures = [];
-    this.materials = [];
-    this.leaves = [];
-    this.nodes = [];
-    
-    this.axis = new CGFaxis(this);
-    this.lightsEnabled = [];
-    this.allLights = "all";
+	this.textures = new Map();
+	this.materials = new Map();
+	this.leaves = [];
+	this.nodes = [];
+
+	this.axis = new CGFaxis(this);
+	this.lightsEnabled = [];
+	this.allLights = "All";
+	
 };
 
 LSXscene.prototype.setInterface = function(myInterface) {
@@ -38,12 +48,13 @@ LSXscene.prototype.initCameras = function() {
 };
 
 LSXscene.prototype.setDefaultAppearance = function() {
-    for (var i = 0; i < this.materials.length; i++) {
-        if (this.materials[i].id == "default") {
-            this.materials[i].apply();
-            break;
-        }
-    }
+	idDefault = "default"
+	if(!(idDefault in this.materials)){
+		console.log("There isn't a default material");
+		return null;
+	}
+	this.materials[idDefault].apply();
+   
 };
 
 LSXscene.prototype.onGraphLoaded = function() {
@@ -52,10 +63,10 @@ LSXscene.prototype.onGraphLoaded = function() {
     this.camera.far = this.graph.initials.frustum.far;
 
     this.axis = new CGFaxis(this, this.graph.initials.reference);
+    
 
-    /*
-     * Illumination
-     */
+    //Illumination
+     
     // Background
     var bg_illum = this.graph.illumination.background;
     this.gl.clearColor(bg_illum.r, bg_illum.g, bg_illum.b, bg_illum.a);
@@ -64,9 +75,7 @@ LSXscene.prototype.onGraphLoaded = function() {
     var ambi_illum = this.graph.illumination.ambient;
     this.setGlobalAmbientLight(ambi_illum.r, ambi_illum.g, ambi_illum.b, ambi_illum.a);
 
-    /*
-     * Lights
-     */
+   //Lights
     this.initLights();
 
 
@@ -78,26 +87,19 @@ LSXscene.prototype.onGraphLoaded = function() {
     if (this.graph.textures.length > 0)
         this.enableTextures(true);
 
-    var text = this.graph.textures;
-    for (var i = 0; i < text.length; i++) {
-        var aux = new SceneTexture(this, text[i].id, text[i].path, text[i].amplif_factor);
-
-        this.textures.push(aux);
+    var graphText = this.graph.textures;
+    for (var i = 0; i < graphText.length; i++) {
+       
+        this.textures[graphText[i].id] = graphText[i];
     }
 
     /*
      * Materials
      */
-    var mat = this.graph.materials;
-    for (i = 0; i < mat.length; i++) {
-        aux = new SceneMaterial(this, mat[i].id);
-        aux.setAmbient(mat[i].ambient.r, mat[i].ambient.g, mat[i].ambient.b, mat[i].ambient.a);
-        aux.setDiffuse(mat[i].diffuse.r, mat[i].diffuse.g, mat[i].diffuse.b, mat[i].diffuse.a);
-        aux.setSpecular(mat[i].specular.r, mat[i].specular.g, mat[i].specular.b, mat[i].specular.a);
-        aux.setEmission(mat[i].emission.r, mat[i].emission.g, mat[i].emission.b, mat[i].emission.a);
-        aux.setShininess(mat[i].shininess);
+    var graphMat = this.graph.materials;
+    for (i = 0; i < graphMat.length; i++) {
 
-        this.materials.push(aux);
+        this.materials[graphMat[i].id] = graphMat[i];
     }
 
     /*
@@ -183,19 +185,19 @@ LSXscene.prototype.initLights = function() {
     this.lights = [];
 
     for (var i = 0; i < this.graph.lights.length; i++) {
-        var l = this.graph.lights[i];
-        var aux = new CGFlight(this, i);
+        var lightGraph = this.graph.lights[i];
+        var newLight = new CGFlight(this, i);
 
-        aux.id = l.id;
-        l.enabled ? aux.enable() : aux.disable();
-        aux.setPosition(l.position.x, l.position.y, l.position.z, l.position.w);
-        aux.setAmbient(l.ambient.r, l.ambient.g, l.ambient.b, l.ambient.a);
-        aux.setDiffuse(l.diffuse.r, l.diffuse.g, l.diffuse.b, l.diffuse.a);
-        aux.setSpecular(l.specular.r, l.specular.g, l.specular.b, l.specular.a);
-        aux.setVisible(true);
-        aux.update();
+        newLight.id = lightGraph.id;
+        lightGraph.enabled ? newLight.enable() : newLight.disable();
+        newLight.setPosition(lightGraph.position.x, lightGraph.position.y, lightGraph.position.z, lightGraph.position.w);
+        newLight.setAmbient(lightGraph.ambient.r, lightGraph.ambient.g,lightGraph.ambient.b, lightGraph.ambient.a);
+        newLight.setDiffuse(lightGraph.diffuse.r, lightGraph.diffuse.g, lightGraph.diffuse.b, lightGraph.diffuse.a);
+        newLight.setSpecular(lightGraph.specular.r, lightGraph.specular.g, lightGraph.specular.b, lightGraph.specular.a);
+        newLight.setVisible(false);
+        newLight.update();
 
-        this.lights[i] = aux;
+        this.lights[i] = newLight;
 		this.lightsEnabled[this.lights[i].id] = this.lights[i].enabled;
     }
 
@@ -276,8 +278,8 @@ LSXscene.prototype.Process = function(node, currMaterial, currTexture, currMatri
 LSXscene.prototype.getMaterial = function(id) {
     if (id == null) return null;
 
-    for (var i = 0; i < this.materials.length; i++)
-        if (id == this.materials[i].id) return this.materials[i];
+    if(id in this.materials)
+    	return this.materials[id];
 
     return null;
 };
@@ -285,26 +287,13 @@ LSXscene.prototype.getMaterial = function(id) {
 LSXscene.prototype.getTexture = function(id) {
     if (id == null) return null;
 
-    for (var i = 0; i < this.textures.length; i++)
-        if (id == this.textures[i].id) return this.textures[i];
+    if(id in this.textures)
+    	return this.textures[id];
 
     return null;
 };
 
-function SceneTexture(scene, id, path, amplif_factor) {
-    CGFtexture.call(this, scene, path);
-    this.id = id;
-    this.amplif_factor = amplif_factor;
-}
-SceneTexture.prototype = Object.create(CGFtexture.prototype);
-SceneTexture.prototype.constructor = SceneTexture;
 
-function SceneMaterial(scene, id) {
-    CGFappearance.call(this, scene);
-    this.id = id;
-}
-SceneMaterial.prototype = Object.create(CGFappearance.prototype);
-SceneMaterial.prototype.constructor = SceneMaterial;
 
 function SceneObject(id) {
     this.id = id;
@@ -315,9 +304,9 @@ function SceneObject(id) {
 }
 
 LSXscene.prototype.updateLight = function(lightId, enable) {
-	console.log("Changing light " + lightId);
+	
 	if(lightId != this.allLights){
-		console.log('entrei1');
+		console.log("Changing light " + lightId);
 		for (var i = 0; i < this.graph.lights.length; ++i) {
 			if (this.lights[i].id == lightId) {
 				var light = this.lights[i];
@@ -326,7 +315,7 @@ LSXscene.prototype.updateLight = function(lightId, enable) {
 			}
 		}
 	}else{
-		console.log('entrei2');
+		console.log("Changing all lights");
 		for (var i = 0; i < this.graph.lights.length; ++i) {	
 			var light = this.lights[i];
 			enable ? light.enable() : light.disable();

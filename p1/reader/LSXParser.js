@@ -1,3 +1,9 @@
+/**
+ * LSXParser
+ * @constructor
+ * @param filename of the LSX file that contains the data to draw the scene 
+ * @param scene 
+ */
 function LSXParser(filename, scene) {
     this.loadedOK = null;
 
@@ -5,7 +11,7 @@ function LSXParser(filename, scene) {
     scene.graph = this;
 
     this.path = "scenes/" + filename;
-    this.reader = new CGFXMLreader();
+    this.reader = new MyReaderLSX();
     this.reader.open(this.path, this);
     this.texture_path = this.path.substring(0, this.path.lastIndexOf("/")) + "/";
     console.log("LSXParser for " + this.path + ".");
@@ -20,69 +26,72 @@ function LSXParser(filename, scene) {
     this.root_id = null;
     this.nodes = [];
 }
-
+/**
+ * LSXParser
+ * Calls all the functions to parse the LSX file
+ */
 LSXParser.prototype.onXMLReady = function() {
     console.log("LSX loaded successfully.");
 
-    var mainElement = this.reader.xmlDoc.documentElement;
+    var rootElement = this.reader.xmlDoc.documentElement;
 
-    console.log("---------INITIALS----------");
+    console.log("*******INITIALS*******");
 
-    var error = this.parseInitials(mainElement);
+    var error = this.parseInitials(rootElement);
     if (error != null) {
         this.onXMLError(error);
         return;
     }
 
-    console.log("---------Illumination----------");
+    console.log("*******ILLUMINATION*******");
 
-    error = this.parseIllumination(mainElement);
+    error = this.parseIllumination(rootElement);
     if (error != null) {
         this.onXMLError(error);
         return;
     }
 
-    console.log("---------Lights----------");
+    console.log("*******LIGHTS*******");
 
-    error = this.parseLights(mainElement);
+    error = this.parseLights(rootElement);
     if (error != null) {
         this.onXMLError(error);
         return;
     }
 
-    console.log("---------Textures----------");
+    console.log("*******TEXTURES*******");
 
-    error = this.parseTextures(mainElement);
+    error = this.parseTextures(rootElement);
     if (error != null) {
         this.onXMLError(error);
         return;
     }
 
-    console.log("---------Materials----------");
+    console.log("*******MATERIALS*******");
 
-    error = this.parseMaterials(mainElement);
+    error = this.parseMaterials(rootElement);
     if (error != null) {
         this.onXMLError(error);
         return;
     }
 
-    console.log("---------Leaves----------");
+    console.log("*******LEAVES*******");
 
-    error = this.parseLeaves(mainElement);
+    error = this.parseLeaves(rootElement);
     if (error != null) {
         this.onXMLError(error);
         return;
     }
 
-    console.log("---------Nodes----------");
+    console.log("*******NODES*******");
 
-    error = this.parseNodes(mainElement);
+    error = this.parseNodes(rootElement);
     if (error != null) {
         this.onXMLError(error);
         return;
     }
 
-    console.log("-------------------");
+    console.log("**************");
 
     this.loadedOK = true;
     this.scene.onGraphLoaded();
@@ -93,18 +102,19 @@ LSXParser.prototype.onXMLError = function(message) {
     this.loadedOK = false;
 };
 
-LSXParser.prototype.parseInitials = function(mainElement) {
-    var initials_list = mainElement.getElementsByTagName('INITIALS')[0];
+LSXParser.prototype.parseInitials = function(rootElement) {
+    //Parse Tag INITIALS
+    var initials_list = rootElement.getElementsByTagName('INITIALS')[0];
     if (initials_list == null) return "<INITIALS> element is missing.";
 
-    // Frustum
+    //Parse Tag Frustum
     var frustum = initials_list.getElementsByTagName('frustum')[0];
     if (frustum == null) return "<frustum> element is missing";
 
     this.initials.frustum.near = this.reader.getFloat(frustum, 'near');
     this.initials.frustum.far = this.reader.getFloat(frustum, 'far');
 
-    //Translation
+    //Parse Tag Translation
     var translation = initials_list.getElementsByTagName('translation')[0];
     if (translation == null) return "<translation> element is missing";
 
@@ -112,7 +122,7 @@ LSXParser.prototype.parseInitials = function(mainElement) {
     this.initials.translation.y = this.reader.getFloat(translation, 'y');
     this.initials.translation.z = this.reader.getFloat(translation, 'z');
 
-    //Rotations
+    //Parse Tag Rotation
     var rotations = initials_list.getElementsByTagName('rotation');
     if (rotations.length != 3 || rotations == null) return "Needs 3 <rotation> elements";
 
@@ -126,14 +136,14 @@ LSXParser.prototype.parseInitials = function(mainElement) {
         this.initials.rotations.push(rot);
     }
 
-    //Scale
+    //Parse Tag Scale
     var scale = initials_list.getElementsByTagName('scale')[0];
     if (scale == null) return "<scale> element is missing";
     this.initials.scale.sx = this.reader.getFloat(scale, 'sx');
     this.initials.scale.sy = this.reader.getFloat(scale, 'sy');
     this.initials.scale.sz = this.reader.getFloat(scale, 'sz');
 
-    //Reference length
+    //Parse Tag Reference length
     var r_length = initials_list.getElementsByTagName('reference')[0];
     if (r_length == null) return "<reference> element is missing";
 
@@ -144,66 +154,76 @@ LSXParser.prototype.parseInitials = function(mainElement) {
     return null;
 };
 
-LSXParser.prototype.parseIllumination = function(mainElement) {
-    var illumination_list = mainElement.getElementsByTagName('ILLUMINATION')[0];
+LSXParser.prototype.parseIllumination = function(rootElement) {
+   //Parse Tag ILLUMINATION
+    var illumination_list = rootElement.getElementsByTagName('ILLUMINATION')[0];
     if (illumination_list == null) return "<ILLUMINATION> element is missing.";
 
-    //Ambient
+    //Parse Tag Ambient
     var ambient = illumination_list.getElementsByTagName('ambient')[0];
     if (ambient == null) return "<ambient> element is missing";
 
-    this.illumination.ambient = this.parseColor(ambient);
+    this.illumination.ambient = this.reader.getRGBA(ambient);
 
-    //Background
+    
+	//Parse Tag Background
     var background = illumination_list.getElementsByTagName('background')[0];
     if (background == null) return "<background> element is missing";
 
-    this.illumination.background = this.parseColor(background);
+    this.illumination.background = this.reader.getRGBA(background);
 
     this.illumination.print();
 
+	
     return null;
 };
 
-LSXParser.prototype.parseLights = function(mainElement) {
-    var lights_list = mainElement.getElementsByTagName('LIGHTS')[0];
+LSXParser.prototype.parseLights = function(rootElement) {
+   
+    //Parse Tag LIGHTS
+    var lights_list = rootElement.getElementsByTagName('LIGHTS')[0];
     if (lights_list == null) return "<LIGHTS> element is missing.";
-
+    //Parse Tag LIGHT (its possible to have multiple lights)
     var lights = lights_list.getElementsByTagName('LIGHT');
     for (i = 0; i < lights.length; i++) {
         var light = new Light(this.reader.getString(lights[i], 'id'));
         light.enabled = this.reader.getBoolean(lights[i].getElementsByTagName('enable')[0], 'value');
-        light.ambient = this.parseColor(lights[i].getElementsByTagName('ambient')[0]);
-        light.diffuse = this.parseColor(lights[i].getElementsByTagName('diffuse')[0]);
-        light.specular = this.parseColor(lights[i].getElementsByTagName('specular')[0]);
+        light.ambient = this.reader.getRGBA(lights[i].getElementsByTagName('ambient')[0]);
+        light.diffuse = this.reader.getRGBA(lights[i].getElementsByTagName('diffuse')[0]);
+        light.specular = this.reader.getRGBA(lights[i].getElementsByTagName('specular')[0]);
 
-        var aux = lights[i].getElementsByTagName('position')[0];
-        light.position.x = this.reader.getFloat(aux, 'x');
-        light.position.y = this.reader.getFloat(aux, 'y');
-        light.position.z = this.reader.getFloat(aux, 'z');
-        light.position.w = this.reader.getFloat(aux, 'w');
+        var pos = lights[i].getElementsByTagName('position')[0];
+        light.position.x = this.reader.getFloat(pos, 'x');
+        light.position.y = this.reader.getFloat(pos, 'y');
+        light.position.z = this.reader.getFloat(pos, 'z');
+        light.position.w = this.reader.getFloat(pos, 'w');
 
         light.print();
         this.lights.push(light);
     }
-
+    console.log('AAAAAAAAA');
+    console.log(lights);
     return null;
+
+
 };
 
-LSXParser.prototype.parseTextures = function(mainElement) {
-    var textures_list = mainElement.getElementsByTagName('TEXTURES')[0];
+LSXParser.prototype.parseTextures = function(rootElement) {
+    //To allow passing the relative path of the textures in the LSX file
+    texture_path = this.path.substring(0, this.path.lastIndexOf("/")) + "/";
+    var textures_list = rootElement.getElementsByTagName('TEXTURES')[0];
     if (textures_list == null) return "<TEXTURES> element is missing.";
-
+    
     var textures = textures_list.getElementsByTagName('TEXTURE');
     for (i = 0; i < textures.length; i++) {
-        var texture = new Texture(textures[i].getAttribute('id'));
+       
+        var relPath = textures[i].getElementsByTagName('file')[0].getAttribute('path');
+        var path = texture_path + relPath;
+        var texture = new Texture(this.scene, textures[i].getAttribute('id'), path);
 
-        var relpath = textures[i].getElementsByTagName('file')[0].getAttribute('path');
-        texture.path = this.texture_path + relpath;
-
-        var aux = textures[i].getElementsByTagName('amplif_factor')[0];
-        texture.amplif_factor.s = this.reader.getFloat(aux, 's');
-        texture.amplif_factor.t = this.reader.getFloat(aux, 't');
+        var ampliST = textures[i].getElementsByTagName('amplif_factor')[0];
+        texture.amplif_factor.s = this.reader.getFloat(ampliST, 's');
+        texture.amplif_factor.t = this.reader.getFloat(ampliST, 't');
 
         texture.print();
         this.textures.push(texture);
@@ -212,29 +232,37 @@ LSXParser.prototype.parseTextures = function(mainElement) {
     return null;
 };
 
-LSXParser.prototype.parseMaterials = function(mainElement) {
-    var materials_list = mainElement.getElementsByTagName('MATERIALS')[0];
+LSXParser.prototype.parseMaterials = function(rootElement) {
+    var materials_list = rootElement.getElementsByTagName('MATERIALS')[0];
     if (materials_list == null) return "<MATERIALS> element is missing.";
 
     var materials = materials_list.getElementsByTagName('MATERIAL');
     for (i = 0; i < materials.length; i++) {
-        var mat = new Material(materials[i].getAttribute('id'));
-        mat.ambient = this.parseColor(materials[i].getElementsByTagName('ambient')[0]);
-        mat.diffuse = this.parseColor(materials[i].getElementsByTagName('diffuse')[0]);
-        mat.specular = this.parseColor(materials[i].getElementsByTagName('specular')[0]);
-        mat.emission = this.parseColor(materials[i].getElementsByTagName('emission')[0]);
+        var newMat = new Material(this.scene, materials[i].getAttribute('id'));
+        
+        ambient = this.reader.getRGBA(materials[i].getElementsByTagName('ambient')[0]);
+        diffuse = this.reader.getRGBA(materials[i].getElementsByTagName('diffuse')[0]);
+        specular = this.reader.getRGBA(materials[i].getElementsByTagName('specular')[0]);
+        emission = this.reader.getRGBA(materials[i].getElementsByTagName('emission')[0]);
+        shininess = this.reader.getFloat(materials[i].getElementsByTagName('shininess')[0], 'value');
 
-        mat.shininess = this.reader.getFloat(materials[i].getElementsByTagName('shininess')[0], 'value');
 
-        mat.print();
-        this.materials.push(mat);
+        newMat.setAmbient(ambient.r, ambient.g, ambient.b, ambient.a);
+        newMat.setDiffuse(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
+        newMat.setSpecular(specular.r, specular.g, specular.b, specular.a);
+        newMat.setEmission(emission.r, emission.g, emission.b, emission.a);
+        newMat.setShininess(shininess);
+
+
+        newMat.print();
+        this.materials.push(newMat);
     }
 
     return null;
 };
 
-LSXParser.prototype.parseLeaves = function(mainElement) {
-    var leaves_list = mainElement.getElementsByTagName('LEAVES')[0];
+LSXParser.prototype.parseLeaves = function(rootElement) {
+    var leaves_list = rootElement.getElementsByTagName('LEAVES')[0];
     if (leaves_list == null) return "<LEAVES> element is missing.";
 
     var leaves = leaves_list.getElementsByTagName('LEAF');
@@ -295,8 +323,8 @@ LSXParser.prototype.parseLeaves = function(mainElement) {
     return null;
 };
 
-LSXParser.prototype.parseNodes = function(mainElement) {
-    var nodes_list = mainElement.getElementsByTagName('NODES')[0];
+LSXParser.prototype.parseNodes = function(rootElement) {
+    var nodes_list = rootElement.getElementsByTagName('NODES')[0];
     if (nodes_list == null) return "<NODES> element is missing.";
 
     var root_node = nodes_list.getElementsByTagName('ROOT')[0];
@@ -360,14 +388,6 @@ LSXParser.prototype.parseNodes = function(mainElement) {
     return null;
 };
 
-LSXParser.prototype.parseColor = function(element) {
-    var color = {};
-    color.r = this.reader.getFloat(element, 'r');
-    color.g = this.reader.getFloat(element, 'g');
-    color.b = this.reader.getFloat(element, 'b');
-    color.a = this.reader.getFloat(element, 'a');
-    return color;
-};
 LSXParser.prototype.findNode = function(id) {
     for (i = 0; i < this.nodes.length; i++)
         if (this.nodes[i].id == id) return this.nodes[i];
@@ -375,177 +395,4 @@ LSXParser.prototype.findNode = function(id) {
     return null;
 };
 
-/*
- * Data structures
- */
-function Initials() {
-    this.frustum = {
-        near: 0.0,
-        far: 0.0
-    };
-    this.translation = {
-        x: 0.0,
-        y: 0.0,
-        z: 0.0
-    };
-    this.rotations = [];
-    this.scale = {
-        sx: 1.0,
-        sy: 1.0,
-        sz: 1.0
-    };
-    this.reference = 0.0;
 
-    this.print = function() {
-        console.log("Frustum (near / far): " + this.frustum.near + " / " + this.frustum.far);
-        console.log("Translation: " + this.translation.x + " " + this.translation.y + " " + this.translation.z);
-        for (i = 0; i < this.rotations.length; i++)
-            console.log("Rotation " + (i + 1) + ": " + this.rotations[i].axis + "> " + this.rotations[i].angle);
-        console.log("Scale: " + this.scale.sx + " " + this.scale.sy + " " + this.scale.sz);
-        console.log("Reference: " + this.reference);
-    };
-}
-
-function Illumination() {
-    this.ambient = {
-        r: 1.0,
-        g: 1.0,
-        b: 1.0,
-        a: 1.0
-    };
-    this.background = {
-        r: 0.0,
-        g: 0.0,
-        b: 0.0,
-        a: 1.0
-    };
-
-    this.print = function() {
-        console.log("Ambient: " + printColor(this.ambient));
-        console.log("Background: " + printColor(this.background));
-        console.log("Doubleside: " + (this.doubleside ? "Yes" : "No"));
-    };
-}
-
-function Light(id) {
-    this.id = id;
-    this.enabled = false;
-    this.position = {
-        x: 0.0,
-        y: 0.0,
-        z: 0.0,
-        w: 0.0
-    };
-    this.ambient = {
-        r: 0.0,
-        g: 0.0,
-        b: 0.0,
-        a: 0.0
-    };
-    this.diffuse = {
-        r: 0.0,
-        g: 0.0,
-        b: 0.0,
-        a: 0.0
-    };
-    this.specular = {
-        r: 0.0,
-        g: 0.0,
-        b: 0.0,
-        a: 0.0
-    };
-
-    this.print = function() {
-        console.log("Light " + this.id + " - " + (this.enabled ? "On" : "Off"));
-        console.log("Position: " + this.position.x + " " + this.position.y + " " + this.position.z + " " + this.position.w);
-        console.log("Ambient: " + printColor(this.ambient));
-        console.log("Diffuse: " + printColor(this.diffuse));
-        console.log("Specular: " + printColor(this.specular));
-    };
-}
-
-function Texture(id) {
-    this.id = id;
-    this.path = "";
-    this.amplif_factor = {
-        s: 0.0,
-        t: 0.0
-    };
-
-    this.print = function() {
-        console.log("Texture " + this.id);
-        console.log("Path: " + this.path);
-        console.log("Amplif Factor: " + "(s:" + this.amplif_factor.s + ", t:" + this.amplif_factor.t + ")");
-    };
-}
-
-function Material(id) {
-    this.id = id;
-    this.shininess = 0.0;
-    this.ambient = {
-        r: 0.0,
-        g: 0.0,
-        b: 0.0,
-        a: 0.0
-    };
-    this.diffuse = {
-        r: 0.0,
-        g: 0.0,
-        b: 0.0,
-        a: 0.0
-    };
-    this.specular = {
-        r: 0.0,
-        g: 0.0,
-        b: 0.0,
-        a: 0.0
-    };
-    this.emission = {
-        r: 0.0,
-        g: 0.0,
-        b: 0.0,
-        a: 0.0
-    };
-
-    this.print = function() {
-        console.log("Material " + this.id);
-        console.log("Shininess: " + this.shininess);
-        console.log("Ambient: " + printColor(this.ambient));
-        console.log("Diffuse: " + printColor(this.diffuse));
-        console.log("Specular: " + printColor(this.specular));
-        console.log("Emission: " + printColor(this.emission));
-    };
-}
-
-function Leaf(id) {
-    this.id = id;
-    this.type = "";
-    this.args = [];
-
-    this.print = function() {
-        console.log("Leaf " + this.id);
-        console.log("Type: " + this.type);
-        console.log("Args: " + this.args);
-    };
-}
-
-function Node(id) {
-    this.id = id;
-    this.material = null;
-    this.texture = null;
-    this.matrix = mat4.create();
-
-    this.descendants = [];
-
-    this.print = function() {
-        console.log("Node " + this.id);
-        console.log("Material " + this.material);
-        console.log("Texture " + this.texture);
-        console.log("Matrix " + this.matrix);
-        console.log("Descendants: " + this.descendants);
-    };
-}
-
-var printColor = function(c) {
-    return "(" + c.r + ", " + c.g + ", " + c.b + ", " + c.a + ")";
-};

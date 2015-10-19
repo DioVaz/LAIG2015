@@ -44,8 +44,8 @@ function getUrlVars() {
 
 serialInclude(['../lib/CGF.js',
     'LSXscene.js',
-    'MySceneGraph.js',
     'LSXParser.js',
+    'MyReaderLSX.js',
     'MyInterface.js',
     'primitives/MyCircle.js',
     'primitives/MyCylinder.js',
@@ -55,10 +55,18 @@ serialInclude(['../lib/CGF.js',
     'primitives/MyTriangle.js',
     'primitives/MyUnitCubeQuad.js',
     'primitives/MySphere.js',
+    'classes/Illumination.js',
+    'classes/Initials.js',
+    'classes/Leaf.js',
+    'classes/Light.js',
+    'classes/Material.js',
+    'classes/Node.js',
+    'classes/Texture.js',
 
     main = function() {
         var app = new CGFapplication(document.body);
         var myScene = new LSXscene();
+        
         myInterface = new MyInterface();
 		myInterface.setScene(myScene);
        
@@ -70,7 +78,7 @@ serialInclude(['../lib/CGF.js',
         app.setInterface(myInterface);
 
       
-         myInterface.setActiveCamera(myScene.camera);
+        myInterface.setActiveCamera(myScene.camera);
         var filename = getUrlVars()['file'] || "garden.lsx";
 
         var myGraph = new LSXParser(filename, myScene);
