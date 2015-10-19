@@ -39,6 +39,26 @@ MyInterface.prototype.onGraphLoaded = function(){
 	    });
 	}
 }
+
+
+
+MyInterface.prototype.processKeyboard = function(event)
+{
+		console.log('Key presssed: ', event);
+		var speed=0.05;
+		var zoom = 1;
+		switch (String.fromCharCode(event.charCode))
+		{
+			case 'a': 		this.scene.camera.orbit('y', -speed );  break;
+			case 'd': 		this.scene.camera.orbit('y', speed ); break;
+			case 'w': 		this.scene.camera.position[2]-=zoom;  this.scene.camera.position[1]-=zoom; this.scene.camera.position[0]-=zoom; break;
+			case 's': 		this.scene.camera.position[0]+=zoom; this.scene.camera.position[1]+=zoom; this.scene.camera.position[2]+=zoom; break;
+
+		}
+}
+
+
+
 /**
  * Set the scene for the interface
  * @param CGFinterface

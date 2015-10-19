@@ -4,14 +4,21 @@ div.dg.a{
 
 .c{
   text-align:center;
+  
 }
 
 li.title{
-  color:white;
+	color:white;
+	font-style: bold;
+	font-size: 1.5em;
+	
 
 }
 
 .dg li.title {
+
+  color:white;
+   font-family: TypeCulture;
   background:#be9fba !important;
   /* border-radius: 25px; */
   background: url(scenes/textures/Leaf_Floor_texture.png)!important;
