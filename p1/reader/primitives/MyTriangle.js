@@ -1,70 +1,69 @@
 /**
- * MyTriangle
- * @param gl {WebGLRenderingContext}
- * @constructor
- */
-function MyTriangle(scene, args) {
-    CGFobject.call(this, scene);
+* My Triangle
+*/
 
-    this.args = args;
+function MyTriangle(scene, x1,y1,z1,x2,y2,z2,x3,y3,z3){
+    CGFobject.call(this,scene);
 
+	this.v1 = vec3.fromValues(x1, y1, z1);
+	this.v2 = vec3.fromValues(x2, y2, z2);
+	this.v3 = vec3.fromValues(x3, y3, z3);
+  
     this.initBuffers();
-};
+}
 
 MyTriangle.prototype = Object.create(CGFobject.prototype);
+
 MyTriangle.prototype.constructor = MyTriangle;
 
 MyTriangle.prototype.initBuffers = function() {
 
-    this.vertices = this.args;
-
-    this.indices = [
-        0, 1, 2,
+    this.vertices = [
+    	this.v1[0], this.v1[1], this.v1[2],
+    	this.v2[0], this.v2[1], this.v2[2],
+    	this.v3[0], this.v3[1], this.v3[2]
     ];
 
-    var vA = vec3.fromValues(this.args[0], this.args[1], this.args[2]);
-    var vB = vec3.fromValues(this.args[3], this.args[4], this.args[5]);
-    var vC = vec3.fromValues(this.args[6], this.args[7], this.args[8]);
+    this.indices = [0,1,2];
 
-    // Get normals
-    var AB = vec3.create();
-    vec3.sub(AB, vB, vA);
-    var AC = vec3.create();
-    vec3.sub(AC, vC, vA);
+	var AB = vec3.create();
+	vec3.sub(AB, this.v2, this.v1);
+	var AC = vec3.create();
+	vec3.sub(AC, this.v3, this.v1);
+	var BC = vec3.create();
+	vec3.sub(BC, this.v3, this.v2);
 
-	  var N = vec3.create();
-	  vec3.cross(N, AB, AC);
-	  vec3.normalize(N, N);
+	var N = vec3.create();
+	vec3.cross(N, AB, BC);
+	vec3.normalize(N, N);
 
-	  this.normals = [
-		    N[0], N[1], N[2],
-		    N[0], N[1], N[2],
-		    N[0], N[1], N[2],
+	this.normals = [
+		N[0], N[1], N[2],
+		N[0], N[1], N[2],
+		N[0], N[1], N[2],
     ];
 
-    var ang = Math.acos(vec3.dot(AB,AC)/(vec3.len(AB)*vec3.len(AC)));
-    var C = [Math.cos(ang) * vec3.len(AC), Math.sin(ang) * vec3.len(AC)];
+    var tC = (vec3.sqrLen(AB) + vec3.sqrLen(AC) - vec3.sqrLen(BC))/ (2 * vec3.length(AB));
+	var sC = Math.sqrt(vec3.sqrLen(AC) - tC * tC);
+	this.nonScaledTexCoords = [
+		0,0,
+		vec3.length(AB),0,
+		sC, tC
+	];
 
-    console.log(ang + " | " + C);
-    this.baseTexCoords = [
-        0, 0,
-        vec3.length(AB), 0,
-        C[0], C[1]
-    ];
+	this.texCoords = this.nonScaledTexCoords.slice(0);
 
-    console.log(this.baseTexCoords);
+    this.primitiveType=this.scene.gl.TRIANGLES;
 
-    this.texCoords = this.baseTexCoords.slice();
+	this.initGLBuffers();
+}
 
-    this.primitiveType = this.scene.gl.TRIANGLES;
-    this.initGLBuffers();
-};
 
-MyTriangle.prototype.updateTex = function(S, T) {
-    for (var i = 0; i < this.texCoords.length; i+=2) {
-        this.texCoords[i] = this.baseTexCoords[i]/S;
-        this.texCoords[i+1] = this.baseTexCoords[i+1]/T;
-    }
+MyTriangle.prototype.scaleTexCoords = function(ampS, ampT) {
+	for (var i = 0; i < this.texCoords.length; i += 2) {
+		this.texCoords[i] = this.nonScaledTexCoords[i] / ampS;
+		this.texCoords[i + 1] = this.nonScaledTexCoords[i+1] / ampT;
+	}
 
-    this.updateTexCoordsGLBuffers();
-};
+	this.updateTexCoordsGLBuffers();
+}

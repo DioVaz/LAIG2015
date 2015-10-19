@@ -41,18 +41,35 @@ MyInterface.prototype.onGraphLoaded = function(){
 }
 
 
-
+/*
+ * Handles events from the mouse - Rotations and zoom
+ */
 MyInterface.prototype.processKeyboard = function(event)
 {
+		CGFinterface.prototype.processKeyboard.call(this,event);
 		console.log('Key presssed: ', event);
 		var speed=0.05;
 		var zoom = 1;
-		switch (String.fromCharCode(event.charCode))
+	
+		switch (event.charCode)
 		{
-			case 'a': 		this.scene.camera.orbit('y', -speed );  break;
-			case 'd': 		this.scene.camera.orbit('y', speed ); break;
-			case 'w': 		this.scene.camera.position[2]-=zoom;  this.scene.camera.position[1]-=zoom; this.scene.camera.position[0]-=zoom; break;
-			case 's': 		this.scene.camera.position[0]+=zoom; this.scene.camera.position[1]+=zoom; this.scene.camera.position[2]+=zoom; break;
+			//'a'
+			case (97): 		this.scene.camera.orbit('y', -speed );  break;
+			//'d'
+			case (100): 		this.scene.camera.orbit('y', speed ); break;
+			//'w'
+			case (119): 		this.scene.camera.position[2]-=zoom;  this.scene.camera.position[1]-=zoom; this.scene.camera.position[0]-=zoom; break;
+			//'s'
+			case (115): 		this.scene.camera.position[0]+=zoom; this.scene.camera.position[1]+=zoom; this.scene.camera.position[2]+=zoom; break;
+
+			//'i'
+			case(105):        this.scene.camera.pan([0,zoom/2,0] );  break;
+			//'k'
+			case(107):        this.scene.camera.pan([0,-zoom/2,0] );  break;
+			//'j'
+			case(106):        this.scene.camera.pan([-zoom/2,0,0] );  break;
+			//'l'
+			case(108):        this.scene.camera.pan([zoom/2,0,0] );  break;
 
 		}
 }
