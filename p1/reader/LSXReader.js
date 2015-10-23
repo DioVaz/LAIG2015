@@ -84,31 +84,3 @@ LSXReader.prototype.getArrayOfFloats = function(element, name, num) {
     }
     return makeArray;
 }
-
-/*
- * Reads a rectangle array from LSX - calls getArrayOfFloats
-*/
-LSXReader.prototype.getRectangle = function(element, name) {
-    return this.getArrayOfFloats(element, name, 4);
-}
-
-/*
- * Reads a cylinder array from LSX - calls getArrayOfFloats
-*/
-LSXReader.prototype.getCylinder = function(element, name) {
-   return this.getArrayOfFloats(element, name, 5);
-}
-
-/*
- * Reads a sphere array from LSX - calls getArrayOfFloats
-*/
-LSXReader.prototype.getSphere = function(element, name) {
-      return this.getArrayOfFloats(element, name, 3);
-}
-
-/*
- * Reads a triangle array from LSX - calls getArrayOfFloats
-*/
-LSXReader.prototype.getTriangle = function(element, attributeName) {
-    return this.getArrayOfFloats(element, attributeName, 9);
-}

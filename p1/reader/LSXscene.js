@@ -1,29 +1,29 @@
 /*
- * LSXscene extends CFGscene
+ * LSXScene extends CFGscene
  * @constructor
  * @param application CFGapplication
  */
-function LSXscene(application) {
+function LSXScene(application) {
     CGFscene.call(this);
 }
 
-LSXscene.prototype = Object.create(CGFscene.prototype);
-LSXscene.prototype.constructor = LSXscene;
+LSXScene.prototype = Object.create(CGFscene.prototype);
+LSXScene.prototype.constructor = LSXScene;
 
 /*
  * Initializes content of scene
  * @param application CFGapplication
  */
-LSXscene.prototype.init = function (application) {
+LSXScene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 
     this.myinterface = null;
     this.graph = null;
 
-    this.initCameras();
+    this.initCameras(); //Set default configuration of camera view
 
-	this.allLights = 'All';
-    this.lightsEnabled = [];
+	this.allLights = 'All'; //ID To control all lights
+    this.lightsEnabled = []; //Control every single light
 
 	this.primitives = [];
  	
@@ -43,21 +43,21 @@ LSXscene.prototype.init = function (application) {
 /*
  * Sets the interface of the scene
  */
-LSXscene.prototype.setInterface = function(myinterface) {
+LSXScene.prototype.setInterface = function(myinterface) {
 	this.myinterface = myinterface;
 }
 
 /*
  * Create camera in default position
  */
-LSXscene.prototype.initCameras = function () {
-    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+LSXScene.prototype.initCameras = function () {
+    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(50, 80, 130), vec3.fromValues(0, 0, 0));
 };
 
 /*
  * Defines default apperence
  */
-LSXscene.prototype.setDefaultAppearance = function () {
+LSXScene.prototype.setDefaultAppearance = function () {
     this.setAmbient(0.5, 0.5, 0.5, 1);
     this.setDiffuse(0.5, 0.5, 0.5, 1);
     this.setSpecular(0.5, 0.5, 0.5, 1);
@@ -67,7 +67,7 @@ LSXscene.prototype.setDefaultAppearance = function () {
 /*
  * Called on the graph is loaded ok
  */
-LSXscene.prototype.onGraphLoaded = function () 
+LSXScene.prototype.onGraphLoaded = function () 
 {
 	this.camera.near = this.graph.initials.frustum.near;
 	this.camera.far = this.graph.initials.frustum.far;
@@ -80,18 +80,28 @@ LSXscene.prototype.onGraphLoaded = function ()
 
 	this.lights = [];
 
+	//load lights from the Grahps
+	//All lights are invisible, enabled or not depends from the lsx
     for (var i = 0; i < this.graph.lights.length; ++i) {
     	this.lights.push(this.graph.lights[i]);
-    	this.lights[i].setVisible(true);
+    	this.lights[i].setVisible(false);
     	this.lightsEnabled[this.lights[i].id] = this.lights[i].enabled;
     }
 
 	//controls all lights
-    this.lightsEnabled[this.allLights] = true;
+    this.lightsEnabled[this.allLights] = false;
+	for (i in this.lights) {
+    	if(this.lights[i].enabled){
+			 this.lightsEnabled[this.allLights] = true;
+			 break;
+		}
+    }
 
+	//loads interface
 	if (this.myinterface != null)
 	    this.myinterface.onGraphLoaded();
 
+	//sets primitives
     for (key in this.graph.leaves) {
     	var leaf = this.graph.leaves[key];
     	switch (leaf.type) {
@@ -102,7 +112,7 @@ LSXscene.prototype.onGraphLoaded = function ()
     			this.primitives[key] = new MyTriangle(this, leaf.v1[0], leaf.v1[1], leaf.v1[2], leaf.v2[0], leaf.v2[1], leaf.v2[2], leaf.v3[0], leaf.v3[1], leaf.v3[2]);
     			break;
     		case "cylinder":
-				this.primitives[key] = new MyCylinder(this, leaf.height, leaf.bottomRadius, leaf.topRadius, leaf.sections, leaf.parts);
+				this.primitives[key] = new MyFullCylinder(this, leaf.height, leaf.bottomRadius, leaf.topRadius, leaf.sections, leaf.parts);
 				break;
 			case "sphere":
 				this.primitives[key] = new MySphere(this, leaf.radius, leaf.stacks, leaf.sections);
@@ -111,7 +121,10 @@ LSXscene.prototype.onGraphLoaded = function ()
     }
 };
 
-LSXscene.prototype.display = function () {
+/*
+ * Draws the scene. Updates with changes
+ */
+LSXScene.prototype.display = function () {
     this.shader.bind();
 
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -151,7 +164,7 @@ LSXscene.prototype.display = function () {
 /*
  * Process graph starting from root
  */
-LSXscene.prototype.processScene = function() {
+LSXScene.prototype.processScene = function() {
 	this.processNode(this.graph.root, "clear", "null");
 	this.setDefaultAppearance();
 }
@@ -161,14 +174,16 @@ LSXscene.prototype.processScene = function() {
  * @param parentTexture receives the texture from the parent
  * @param parentMaterial receives the material from the parent
  */
-LSXscene.prototype.processNode = function(node, parentTexture, parentMaterial) {
+LSXScene.prototype.processNode = function(node, parentTexture, parentMaterial) {
 	//Node is leaf
 	if (node in this.primitives) {
+		//set materials
 		if (parentMaterial != "null")
 			this.graph.materials[parentMaterial].apply();
 		else
 			this.setDefaultAppearance();
 	
+		//set texture
 		var texture;
 
 		if (parentTexture != "clear")
@@ -177,7 +192,7 @@ LSXscene.prototype.processNode = function(node, parentTexture, parentMaterial) {
 			this.primitives[node].scaleTexCoords(texture.amplifyFactor.s, texture.amplifyFactor.t);
 			texture.bind();
 		}
-					
+		//get primitive to draw
 		this.primitives[node].display();
 
 		if (texture)
@@ -213,7 +228,7 @@ LSXscene.prototype.processNode = function(node, parentTexture, parentMaterial) {
  * @param lightId
  * @param enable boolean
  */
-LSXscene.prototype.updateLight = function(lightId, enable) {
+LSXScene.prototype.updateLight = function(lightId, enable) {
 	
 	//Switch only one light
 	if(lightId != this.allLights){

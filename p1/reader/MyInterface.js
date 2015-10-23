@@ -56,11 +56,13 @@ MyInterface.prototype.processKeyboard = function(event)
 			//'a'
 			case (97): 		this.scene.camera.orbit('y', -speed );  break;
 			//'d'
-			case (100): 		this.scene.camera.orbit('y', speed ); break;
+			case (100): 	this.scene.camera.orbit('y', speed ); break;
 			//'w'
-			case (119): 		this.scene.camera.position[2]-=zoom;  this.scene.camera.position[1]-=zoom; this.scene.camera.position[0]-=zoom; break;
+			case (119): 	this.scene.camera.zoom(zoom); break;
+				
 			//'s'
-			case (115): 		this.scene.camera.position[0]+=zoom; this.scene.camera.position[1]+=zoom; this.scene.camera.position[2]+=zoom; break;
+			case (115): 	this.scene.camera.zoom(-zoom); break;
+
 
 			//'i'
 			case(105):        this.scene.camera.pan([0,zoom/2,0] );  break;
