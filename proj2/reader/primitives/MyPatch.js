@@ -5,7 +5,18 @@
  * @param parts number of parts
  */
 function MyPatch(scene, order ,partsU, partsV, controlPoints){
-	var nurbsSurface = new CGFnurbsSurface(1, 1, [0,0,1,1], [0,0,1,1], [[[0,0,0],[1,0,0]], [[1,0,0], [1,0,1]]]);
+	if(order == 1){
+		knots = [0, 0, 1, 1];
+	}else if(order == 2){
+		knots = [0, 0, 0, 1, 1, 1];
+	}else if(order == 3){
+		knots = [0, 0, 0, 0, 1, 1, 1, 1];
+	}else{
+		console.error("Wrong order of Pacth");
+		return;
+	}
+	
+	var nurbsSurface = new CGFnurbsSurface(order, order, knots, knots, controlPoints);
 	getSurfacePoint = function(u, v) {
 		return nurbsSurface.getPoint(u, v);
 	};

@@ -52,22 +52,22 @@ LinearAnimation.prototype.init = function() {
     }
 }
 
-LinearAnimation.prototype.update = function(t) {
+LinearAnimation.prototype.update = function(currTime) {
     
     var matrix = mat4.create();
     mat4.identity(matrix);
     
-    if (t < 0)
+    if (currTime < 0)
         return matrix;
 
-    t = Math.min(t, this.timeSpan);
+    currTime = Math.min(currTime, this.timeSpan);
    
     var index;
     for (index = this.controlPointsTime.length - 1; index > 0; --index)
-        if (this.controlPointsTime[index] < t)
+        if (this.controlPointsTime[index] < currTime)
             break;
 
-    var tScale = (t - this.controlPointsTime[index]) / this.controlPointsSpan[index];
+    var tScale = (currTime - this.controlPointsTime[index]) / this.controlPointsSpan[index];
     var position = vec3.clone(this.controlPoints[index]);
     var translation_amount = vec3.create();
     vec3.scale(translation_amount, this.translations[index], tScale);

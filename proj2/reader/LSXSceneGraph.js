@@ -531,7 +531,18 @@ LSXSceneGraph.prototype.parseLeaves = function(rootElement) {
 				order = this.reader.getInteger(leaf, "order");
 				partsU = this.reader.getInteger(leaf, "partsU");
 				partsV = this.reader.getInteger(leaf, "partsV");
-				this.leaves[id] = new LeafSurface(id, parts, order, partsU, partsV);
+				var controlPoints = [];
+				if(leaf.children.length != (order + 1)^2)
+					return "number of control points must be (order + 1)^2 in patch" + id;
+				for (var j = 0; j < leaf.children.length; j++) {
+						var controlpoint = leaf.children[j];
+						var x = this.reader.getFloat(controlpoint, "x");
+						var y = this.reader.getFloat(controlpoint, "y");
+						var z = this.reader.getFloat(controlpoint, "z");
+						controlPoints.push(vec4.fromValues(x,y,z,1));
+				}
+				
+				this.leaves[id] = new LeafPatch(id, order, partsU, partsV, controlPoints);
 				break;
 					
 			default:

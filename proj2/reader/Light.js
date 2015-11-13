@@ -9,7 +9,7 @@
 function Light(scene, an, id) {
 	console.log(an);
     CGFlight.call(this, scene, an);
-    this.id = id;
+    this.name = id;
 }
 
 Light.prototype = Object.create(CGFlight.prototype);

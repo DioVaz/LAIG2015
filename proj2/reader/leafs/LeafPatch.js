@@ -10,6 +10,11 @@
  */
 function LeafPatch(id, degree, partsU, partsV, controlPoints) {
     Leaf.call(this, id, "patch");
+    this.id = id;
+    this.degree = degree;
+    this.partsU = partsU;
+    this.partsV = partsV;
+    this.controlPoints = controlPoints;
 
 }
 

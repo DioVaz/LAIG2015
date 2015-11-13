@@ -89,7 +89,7 @@ LSXScene.prototype.onGraphLoaded = function ()
     for (var i = 0; i < this.graph.lights.length; i++) {
     	this.lights.push(this.graph.lights[i]);
     	this.lights[i].setVisible(false);
-    	this.lightsEnabled[this.lights[i].id] = this.lights[i].enabled;
+    	this.lightsEnabled[this.lights[i].name] = this.lights[i].enabled;
     }
 
 	
@@ -122,6 +122,9 @@ LSXScene.prototype.onGraphLoaded = function ()
 			case "sphere":
 				this.primitives[key] = new MySphere(this, leaf.radius, leaf.stacks, leaf.sections);
 				break;
+			case "patch":
+				this.primitives[key] = new MyPatch(this, leaf.degree, leaf.partsU, leaf.partsV, leaf.controlPoints);
+				break;
     	}
     }
 };
@@ -141,7 +144,6 @@ LSXScene.prototype.display = function () {
 
 	// Apply transformations from the camera setup
 	this.applyViewMatrix();
-
 
 	//Process scene if LSX read ok
 	if (this.graph != null && this.graph.loadedOk)
