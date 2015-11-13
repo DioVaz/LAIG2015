@@ -1,0 +1,56 @@
+div.dg.a{
+  width: 119px!important;
+}
+
+.c{
+  text-align:center;
+  
+}
+
+li.title{
+	color:white;
+	font-style: bold;
+	font-size: 1.5em;
+	
+
+}
+
+.dg li.title {
+
+  color:white;
+   font-family: TypeCulture;
+  background:#be9fba !important;
+  /* border-radius: 25px; */
+  background: url(scenes/textures/Leaf_Floor_texture.png)!important;
+  background-position: left top;
+  background-repeat: repeat;
+  padding: 20px;
+  /* padding-left:70px !important; */
+  /* padding-right:35px !important; */
+}
+
+.dg li:not(.title) {
+  background:#be9fba !important;
+  background: url(scenes/textures/wood.png)!important;
+  background-position: left top;
+  background-repeat: repeat;
+  padding: 20px;
+  padding-right:25px;
+}
+
+.dg.main .close-button{
+  background:#be9fba !important;
+  width: 119px!important;
+  background: url(scenes/textures/treeWood.png)!important;
+  background-position: left top;
+  background-repeat: repeat;
+}
+
+.dg li.cr .boolean {
+  background:#be9fba !important;
+  border-radius: 25px;
+  background: url(scenes/textures/wood.png)!important;
+  background-position: left top;
+  background-repeat: repeat;
+  padding: 20px;
+}

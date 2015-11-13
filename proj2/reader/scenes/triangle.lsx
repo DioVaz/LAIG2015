@@ -1,0 +1,145 @@
+<SCENE>
+
+<INITIALS>
+        <frustum near="1.5" far="500" />
+        <translation x="0" y="0" z="0" />
+        <rotation axis="x" angle="0" />
+        <rotation axis="y" angle="0" />
+        <rotation axis="z" angle="0" />
+        <scale sx="1" sy="1" sz="1" />
+        <reference length="0" />
+    </INITIALS>
+
+    <ILLUMINATION>
+        <ambient r="0.1" g="0.5" b="0.7" a="1" />
+		<background r="0.1" g="0.4" b="0.5" a="1" />
+    </ILLUMINATION>
+
+    <LIGHTS>
+        <LIGHT id="Red">
+            <enable value="1" />
+            <position x="-20" y="30" z="40" w="1" />
+            <ambient r="0" g="0" b="0" a="1" />
+            <diffuse r="1" g="0.3" b="0.2" a="1" />
+            <specular r="1" g="0.3" b="0.2" a="1" />
+        </LIGHT>
+		
+		<LIGHT id="Blue">
+            <enable value="1" />
+            <position x="0" y="50" z="0" w="1" />
+			<ambient r="0.3" g="0.7" b="0.9" a="1" />
+            <diffuse r="0.3" g="0.7" b="0.9" a="1" />
+            <specular r="0.3" g="0.7" b="0.9" a="1" />
+        </LIGHT>
+		
+	<LIGHT id="Yellow">
+            <enable value="1" />
+            <position x="20" y="5" z="20" w="1" />    
+			<ambient r="0" g="0" b="0" a="0" />			
+            <diffuse r="1" g="1" b="0.4" a="1" />
+            <specular r="1" g="1" b="0.4" a="1" />
+        </LIGHT>
+		
+	
+    </LIGHTS>
+
+
+<TEXTURES>
+
+	<TEXTURE id="nosig">
+        <file path="nosignal.jpg" />                             <!-- path to file -->
+        <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+    </TEXTURE>
+
+	
+
+
+    <!-- NOTE: this block "TEXTURE" must be repeated as necessary with different "id" -->
+    
+</TEXTURES>
+
+
+<MATERIALS>
+	<MATERIAL id="default">
+		<shininess value="10" />
+		<specular r="0.0" g="0.0" b="0.0" a="0.0" />
+		<diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+		<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
+		<emission r="0" g="0" b="0" a="0" />
+	</MATERIAL>
+
+	
+
+    <!-- NOTE: the "MATERIAL" block may be repeated as required. Each defined material requires a distinct "id" -->
+
+</MATERIALS>
+
+
+<LEAVES>
+        <!-- Are drawn along the X axis  -->
+		<LEAF id="idSquare" type = "rectangle" args="0 1 1 0" />
+        <LEAF id="idCube" type="rectangle" args="0 0 1 1" />
+        <LEAF id="idCylinder" type="cylinder" args="1.0 1.0 1.0 16 200" />
+        <LEAF id="idCone" type="cylinder" args="1.0 1.0 0.01 16 200" />
+        <LEAF id="idSphere" type="sphere" args="1.0 16 16" />
+		<LEAF id = "idTower" type="cylinder" args="1.0 1.5 1.0 16 200" />
+        <LEAF id="idTriangle" type="triangle" args="-0.5 -0.5 0  0.5 -0.5 0  0 0.5 0"/>
+
+		  <!-- Parameters of the above primitives:                                                         -->
+        <!--rectangle: 2D coordinates for left-top and right-bottom vertices.                        -->
+        <!-- cylinder:  height, bottom radius, top radius, sections along height, parts per section  -->
+        <!-- sphere:    radius, parts along radius, parts per section                                -->
+        <!-- triangle:   coordinates of each vertex      --> 
+
+</LEAVES>
+
+
+<NODES>
+
+    <ROOT id="WorldScene" />     <!-- identifier of root node of the scene graph; this node     -->
+                         <!--   must be defined in one of the following NODE declarations -->
+
+						 
+	<NODE id="WorldScene">       <!--   defines one intermediate node; may be repeated as necessary -->
+
+        <!-- next two lines are mandatory -->
+        <MATERIAL id="default" />      <!-- declared material superimposes the material received from parent node -->
+                                  <!-- id="null" maintains material from parent node        -->
+        <TEXTURE id="clear" />       <!-- declared texture superimposes the texture received from parent node -->
+                                  <!-- id="null" maintains texture from parent node       -->
+                                  <!-- id="clear" clears texture declaration received from parent node      -->
+
+		
+        <!-- declaring descendents, ate least one node or one leaf must be present -->
+        <DESCENDANTS>
+			 
+			<DESCENDANT id="plataform" />
+		
+
+        </DESCENDANTS>
+
+    </NODE>
+
+
+ <!-- DEFINIR PLATAFORMA -->	
+       <NODE id="plataform">
+            <MATERIAL id="default" />
+            <TEXTURE id="nosig" />	
+			
+			
+			<SCALE sx="1" sy="1" sz="1" />
+
+            <DESCENDANTS>
+                <DESCENDANT id="idTriangle" />  <!-- bottom -->
+				
+            </DESCENDANTS>
+        </NODE>
+		
+
+		
+
+
+		
+</NODES>
+
+</SCENE>
