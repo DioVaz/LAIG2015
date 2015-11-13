@@ -5,7 +5,7 @@
  * @param texture of the terrain
  * @param heightMap map of heights for the terrain
  */
-function LeafTerrain(id,texture, heightMap) {
+function LeafTerrain(id, texture, heightMap) {
     Leaf.call(this, id, "terrain");
 	this.texture = texture;
 	this.heightMap = heightMap;

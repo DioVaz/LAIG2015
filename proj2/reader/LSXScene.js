@@ -250,7 +250,7 @@ LSXScene.prototype.updateLight = function(lightId, enable) {
 	if(lightId != this.allLights){
 		console.log("Changing light " + lightId);
 		for (var i = 0; i < this.graph.lights.length; ++i) {
-			if (this.lights[i].id == lightId) {
+			if (this.lights[i].name == lightId) {
 				var light = this.lights[i];
 				enable ? light.enable() : light.disable();
 				return;

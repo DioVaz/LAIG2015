@@ -1,7 +1,9 @@
 /**
  * Animation
  * @constructor
- * @param id of cylinder
+ * @param id of animation
+ * @param timeSpan duration of animation in seconds
+ @ @param type type of animations ("circular" or "linear")
  */
 function Animation(id, timeSpan, type) {
    this.id = id;

@@ -532,14 +532,22 @@ LSXSceneGraph.prototype.parseLeaves = function(rootElement) {
 				partsU = this.reader.getInteger(leaf, "partsU");
 				partsV = this.reader.getInteger(leaf, "partsV");
 				var controlPoints = [];
-				if(leaf.children.length != (order + 1)^2)
+
+				if(leaf.children.length != Math.pow((order + 1),2))
 					return "number of control points must be (order + 1)^2 in patch" + id;
-				for (var j = 0; j < leaf.children.length; j++) {
-						var controlpoint = leaf.children[j];
+				index = 0;
+				
+				for (var j = 0; j < (order + 1); j++) {
+					var controlPointTemp = [];
+					for(var k = 0; k< (order + 1); k++){
+						var controlpoint = leaf.children[k + index];
 						var x = this.reader.getFloat(controlpoint, "x");
 						var y = this.reader.getFloat(controlpoint, "y");
 						var z = this.reader.getFloat(controlpoint, "z");
-						controlPoints.push(vec4.fromValues(x,y,z,1));
+						controlPointTemp.push(vec4.fromValues(x,y,z,1));
+					}
+					controlPoints.push(controlPointTemp);
+					index += order + 1;
 				}
 				
 				this.leaves[id] = new LeafPatch(id, order, partsU, partsV, controlPoints);
@@ -550,7 +558,6 @@ LSXSceneGraph.prototype.parseLeaves = function(rootElement) {
 		}
 	}
 }
-
 
 
 /*
@@ -767,7 +774,6 @@ LSXSceneGraph.prototype.parseNode = function(node) {
 /*
  * Callback to be executed on any read error
  */
- 
 LSXSceneGraph.prototype.onXMLError=function (message) {
 	console.error("XML Loading Error: "+message);	
 	this.loadedOk=false;
