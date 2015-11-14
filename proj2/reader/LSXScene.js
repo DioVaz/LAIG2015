@@ -122,6 +122,9 @@ LSXScene.prototype.onGraphLoaded = function ()
 			case "sphere":
 				this.primitives[key] = new MySphere(this, leaf.radius, leaf.stacks, leaf.sections);
 				break;
+			case "plane":
+				this.primitives[key] = new MyPlane(this, leaf.parts);
+				break;
 			case "patch":
 				this.primitives[key] = new MyPatch(this, leaf.degree, leaf.partsU, leaf.partsV, leaf.controlPoints);
 				break;

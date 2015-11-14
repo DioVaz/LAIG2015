@@ -534,7 +534,7 @@ LSXSceneGraph.prototype.parseLeaves = function(rootElement) {
 				var controlPoints = [];
 
 				if(leaf.children.length != Math.pow((order + 1),2))
-					return "number of control points must be (order + 1)^2 in patch" + id;
+					return "number of control points must be (order + 1)^2 in patch " + id;
 				index = 0;
 				
 				for (var j = 0; j < (order + 1); j++) {
@@ -551,6 +551,16 @@ LSXSceneGraph.prototype.parseLeaves = function(rootElement) {
 				}
 				
 				this.leaves[id] = new LeafPatch(id, order, partsU, partsV, controlPoints);
+				break;
+			case "terrain":
+					texture = this.reader.getString(leaf, "texture");
+					if(!(texture in this.textures) && texture != "null" && texture != "clear")
+						return "texture error in terrain " + id;
+					
+					heightMap = this.reader.getString(leaf, "heightmap");
+					if(heightMap == null)
+						return "missing heightmap in terrain " + id;
+					this.leaves[id] = new LeafTerrain(id, texture, heightMap);
 				break;
 					
 			default:

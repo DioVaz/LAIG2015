@@ -239,6 +239,7 @@
 			<CONTROLPOINT x="8" y="2" z="2" />
 			
 		</LEAF>
+		<LEAF id="idTerrain" type="terrain" texture = "bridgeText" heightmap = "teste"/>
 
 </LEAVES>
 
@@ -458,7 +459,7 @@
 			<TRANSLATION x="0" y="15" z="0" />
 			<SCALE sx="5" sy="5" sz="5" />
 			<DESCENDANTS>
-				<DESCENDANT id="idSurf" />
+				<DESCENDANT id="idPlane" />
 
 				
 			</DESCENDANTS>

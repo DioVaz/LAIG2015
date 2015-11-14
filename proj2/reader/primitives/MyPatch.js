@@ -5,6 +5,7 @@
  * @param parts number of parts
  */
 function MyPatch(scene, order ,partsU, partsV, controlPoints){
+	
 	if(order == 1){
 		knots = [0, 0, 1, 1];
 	}else if(order == 2){
