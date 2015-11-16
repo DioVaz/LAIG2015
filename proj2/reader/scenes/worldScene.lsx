@@ -23,7 +23,7 @@
             <diffuse r="1" g="0.3" b="0.2" a="1" />
             <specular r="1" g="0.3" b="0.2" a="1" />
         </LIGHT>
-		
+
 		<LIGHT id="Blue">
             <enable value="1" />
             <position x="0" y="50" z="0" w="1" />
@@ -31,16 +31,16 @@
             <diffuse r="0.3" g="0.7" b="0.9" a="1" />
             <specular r="0.3" g="0.7" b="0.9" a="1" />
         </LIGHT>
-		
+
 	<LIGHT id="Yellow">
             <enable value="1" />
-            <position x="20" y="5" z="20" w="1" />    
-			<ambient r="0" g="0" b="0" a="0" />			
+            <position x="20" y="5" z="20" w="1" />
+			<ambient r="0" g="0" b="0" a="0" />
             <diffuse r="1" g="1" b="0.4" a="1" />
             <specular r="1" g="1" b="0.4" a="1" />
         </LIGHT>
-		
-	
+
+
     </LIGHTS>
 
 
@@ -55,12 +55,12 @@
         <file path="textures/wallStone.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 	<TEXTURE id="wallHouse">
         <file path="textures/wallHouse.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 	<TEXTURE id="towerStone">
         <file path="textures/stoneWall.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
@@ -69,23 +69,23 @@
         <file path="textures/stoneWall.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="4" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 	<TEXTURE id="roofHouse">
         <file path="textures/roof.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 	<TEXTURE id="wood">
         <file path="textures/wood.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 	<TEXTURE id="texWater">
         <file path="textures/water.png" />                             <!-- path to file -->
         <amplif_factor s="0.5" t="10" />                <!-- x/s, y/t -->
     </TEXTURE>
 
-	
+
 	<TEXTURE id="hillGreen">
         <file path="textures/hillGreen.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
@@ -100,7 +100,7 @@
         <file path="textures/Leaf_Floor_texture.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 	<TEXTURE id="woodTree">
         <file path="textures/wood_texture.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
@@ -110,17 +110,17 @@
         <file path="textures/treeWood.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
-		
+
 	<TEXTURE id="fireText">
         <file path="textures/fire.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 	<TEXTURE id="woodFloor">
         <file path="textures/woodFloor.png" />                             <!-- path to file -->
         <amplif_factor s="0.2" t="0.2" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 	<TEXTURE id="doorText">
         <file path="textures/door.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
@@ -135,12 +135,12 @@
         <file path="textures/path.png" />                             <!-- path to file -->
         <amplif_factor s="0.16667" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 	<TEXTURE id="pathTextZ">
         <file path="textures/path.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="0.16667" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 	<TEXTURE id="vaneText">
         <file path="textures/post.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
@@ -150,16 +150,16 @@
         <file path="textures/sail.png" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 	<TEXTURE id="bridgeText">
         <file path="textures/brick.jpg" />                             <!-- path to file -->
         <amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
     </TEXTURE>
-	
+
 
 
     <!-- NOTE: this block "TEXTURE" must be repeated as necessary with different "id" -->
-    
+
 </TEXTURES>
 
 
@@ -186,7 +186,7 @@
 		<ambient r="0.5" g="0.5" b="0.0" a="1.0" />
 		<emission r="1.0" g="0.5" b="0" a="1.0" />
 	</MATERIAL>
-	
+
 	<MATERIAL id="logMat">
 		<shininess value="1" />
 		<specular r="1" g="0.5" b="0.0" a="1" />
@@ -194,7 +194,7 @@
 		<ambient r="0.5" g="0.5" b="0.0" a="1.0" />
 		<emission r="0.5" g="0" b="0" a="0" />
 	</MATERIAL>
-	
+
 	<MATERIAL id="trunkMat">
 		<shininess value="1" />
 		<specular r="1.0" g="1.0" b="0.2" a="1.0" />
@@ -202,8 +202,8 @@
 		<ambient  r="1.0" g="0.4" b="0.0" a="1.0" />
 		<emission r="0" g="0" b="0" a="0" />
 	</MATERIAL>
-	
-	
+
+
 
     <!-- NOTE: the "MATERIAL" block may be repeated as required. Each defined material requires a distinct "id" -->
 
@@ -237,9 +237,9 @@
 			<CONTROLPOINT x="6" y="-1.5" z="0" />
 			<CONTROLPOINT x="7" y="-2.0" z="2" />
 			<CONTROLPOINT x="8" y="2" z="2" />
-			
+
 		</LEAF>
-		<LEAF id="idTerrain" type="terrain" texture = "bridgeText" heightmap = "teste"/>
+		<LEAF id="idTerrain" type="terrain" texture="texture.jpg" heightmap = "terrainmap.jpg"/>
 
 </LEAVES>
 
@@ -265,7 +265,7 @@
     <ROOT id="WorldScene" />     <!-- identifier of root node of the scene graph; this node     -->
                          <!--   must be defined in one of the following NODE declarations -->
 
-						 
+
 	<NODE id="WorldScene">       <!--   defines one intermediate node; may be repeated as necessary -->
 
         <!-- next two lines are mandatory -->
@@ -275,11 +275,11 @@
                                   <!-- id="null" maintains texture from parent node       -->
                                   <!-- id="clear" clears texture declaration received from parent node      -->
 
-		
+
         <!-- declaring descendents, ate least one node or one leaf must be present -->
         <DESCENDANTS>
-			 
-			<DESCENDANT id="plataform" />
+
+
 			<DESCENDANT id="waterHouse" />
 			<DESCENDANT id="testeSurface" />
 
@@ -288,126 +288,27 @@
     </NODE>
 
 
- <!-- DEFINIR PLATAFORMA -->	
-       <NODE id="plataform">
-            <MATERIAL id="default" />
-            <TEXTURE id="forest" />	
-			
-			<TRANSLATION x="-25" y="0" z="-25" />
-			<SCALE sx="70" sy="2" sz="70" />
 
-            <DESCENDANTS>
-                <DESCENDANT id="plataform1" />  <!-- bottom -->
-				<DESCENDANT id="plataform2" />  <!-- front -->
-				<DESCENDANT id="plataform3" />  <!-- left -->
-				<DESCENDANT id="plataform4" />  <!-- back -->
-				<DESCENDANT id="plataform5" />  <!-- right -->
-				<DESCENDANT id="plataform6" />  <!-- top -->
-            </DESCENDANTS>
-        </NODE>
-		
-		<NODE id="plataform1">
-            <MATERIAL id="null" />
-            <TEXTURE id="null" />
 
-			<TRANSLATION x="0" y="-1" z="0" />
-            <ROTATION axis="x" angle="90" />
-			
+ <!-- DEFINIR MOINHO -->
 
-            <DESCENDANTS>
-                <DESCENDANT id="idSquare" />
-            </DESCENDANTS>
-
-        </NODE>
-		
-
-		<NODE id="plataform2">
-            <MATERIAL id="null" />
-            <TEXTURE id="null" />
-
-            <TRANSLATION x="0" y="-1" z="1" />
-         	
-            <DESCENDANTS>
-                <DESCENDANT id="idSquare" />
-            </DESCENDANTS>
-
-        </NODE>
-
-        <NODE id="plataform3">
-            <MATERIAL id="null" />
-            <TEXTURE id="null" />
-			
-			<TRANSLATION x="0" y="-1" z="0" />
-            <ROTATION axis="y" angle="-90" />
-			
-            <DESCENDANTS>
-                <DESCENDANT id="idSquare" />
-            </DESCENDANTS>
-
-        </NODE>
-		
-		
-		<NODE id="plataform4">
-            <MATERIAL id="null" />
-            <TEXTURE id="null" />
-			
-			<TRANSLATION x="1" y="-1" z="0" />
-			<ROTATION axis="y" angle="180" />
-			
-            <DESCENDANTS>
-                <DESCENDANT id="idSquare" />
-            </DESCENDANTS>
-
-        </NODE>
-
-        <NODE id="plataform5">
-            <MATERIAL id="null" />
-            <TEXTURE id="null" />
-		
-            <TRANSLATION x="1" y="-1" z="1" />
-            <ROTATION axis="y" angle="90" />
-
-            <DESCENDANTS>
-                <DESCENDANT id="idSquare" />
-            </DESCENDANTS>
-
-        </NODE>
-		
-        <NODE id="plataform6">
-            <MATERIAL id="null" />
-            <TEXTURE id="null" />
-
-            <TRANSLATION x="0" y="0" z="1" />
-            <ROTATION axis="x" angle="-90" />
-			
-            <DESCENDANTS>
-                <DESCENDANT id="idSquare" />
-            </DESCENDANTS>
-
-        </NODE>
-		
-		
-
-	
- <!-- DEFINIR MOINHO -->	
- 
 		<NODE id="waterHouse">
 			<MATERIAL id="null" />
 			<TEXTURE id="stoneHouse" />
-			
+
 			<ANIMATIONREF id="linearMove" />
 
 			<DESCENDANTS>
 				<DESCENDANT id="baseHouse" />
 				<DESCENDANT id="cylinderHouse" />
 				<DESCENDANT id="roofHouse" />
-				
+
 			</DESCENDANTS>
-			
-			
+
+
 
         </NODE>
-		
+
 		<NODE id="baseHouse">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -415,15 +316,10 @@
 			<SCALE sx="9" sy="9" sz="9" />
 			<TRANSLATION x="-0.5" y="1" z="-0.5" />
             <DESCENDANTS>
-                <DESCENDANT id="plataform1" />
-                <DESCENDANT id="plataform2" />
-                <DESCENDANT id="plataform3" />
-                <DESCENDANT id="plataform4" />
-                <DESCENDANT id="plataform5" />
-                <DESCENDANT id="plataform6" />
-            </DESCENDANTS>
+        <DESCENDANT id="idCylinder" />
+      </DESCENDANTS>
         </NODE>
-		
+
 		<NODE id="cylinderHouse">
 			<MATERIAL id="null" />
 			<TEXTURE id="wallHouse" />
@@ -436,7 +332,7 @@
 				<DESCENDANT id="idCylinder" />
 			</DESCENDANTS>
         </NODE>
-		
+
 		<NODE id="roofHouse">
 			<MATERIAL id="null" />
 			<TEXTURE id="roofHouse" />
@@ -449,9 +345,9 @@
 				<DESCENDANT id="idCone" />
 			</DESCENDANTS>
         </NODE>
-		
-		
-<!-- TESTE SURFACE -->		
+
+
+<!-- TESTE SURFACE -->
 
 		<NODE id="testeSurface">
 			<MATERIAL id="null" />
@@ -459,16 +355,16 @@
 			<TRANSLATION x="0" y="15" z="0" />
 			<SCALE sx="5" sy="5" sz="5" />
 			<DESCENDANTS>
-				<DESCENDANT id="idPlane" />
+				<DESCENDANT id="idTerrain" />
 
-				
+
 			</DESCENDANTS>
-			
-			
+
+
 
         </NODE>
-		
-		
+
+
 </NODES>
 
 </SCENE>

@@ -219,6 +219,9 @@ LSXScene.prototype.processNode = function(node, parentTexture, parentMaterial) {
 			texture.bind();
 		}
 		//get primitive to draw
+    console.log(node);
+    if (node=='idTerrain')
+      debugger
 		this.primitives[node].display();
 
 		if (texture)

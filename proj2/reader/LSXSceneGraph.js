@@ -2,7 +2,7 @@
 deg2rad = Math.PI / 180
 /*
  * LSXSceneGraph
- * @constructor 
+ * @constructor
  * @param filename filename of the scene
  * @param CGFscene object
 */
@@ -13,7 +13,7 @@ function LSXSceneGraph(filename, scene) {
 	}
 	this.loadedOk = null;
 	this.filename = 'scenes/'+filename;
-	
+
     this.initials = new Initials();
     this.illumination = new Illumination();
     this.lights = [];
@@ -26,24 +26,24 @@ function LSXSceneGraph(filename, scene) {
 
 	this.scene = scene;
 	scene.graph=this;
-		
+
 	//File reader
 	this.reader = new LSXReader();
 
 
 	//Reads content of filename. Returns message erros in case of fail
-	this.reader.open(this.filename, this);  
+	this.reader.open(this.filename, this);
 }
 
 /*
  * Function called if the XML was sucessful read
  */
-LSXSceneGraph.prototype.onXMLReady=function() 
+LSXSceneGraph.prototype.onXMLReady=function()
 {
 	console.log("XML Loading finished.");
 	var rootElement = this.reader.xmlDoc.documentElement;
-	
-	
+
+
 	var error = this.parseSceneGraph(rootElement);
 
 	if (error != null) {
@@ -79,8 +79,8 @@ LSXSceneGraph.prototype.parseSceneGraph = function(rootElement) {
 			error = "The order of the TAGS is wrong";
 			return error;
 	}
-		
-	
+
+
 
 	console.log("*******INITIALS*******");
     var error = this.parseInitials(rootElement);
@@ -153,8 +153,8 @@ LSXSceneGraph.prototype.parseInitials = function(rootElement) {
 	}
 
 	var initials = initialsTemp[0];
-	
-	
+
+
 	if (initials.children[1].nodeName != "translation" ||
 	    initials.children[2].nodeName != "rotation" ||
 	    initials.children[3].nodeName != "rotation" ||
@@ -162,8 +162,8 @@ LSXSceneGraph.prototype.parseInitials = function(rootElement) {
 	    initials.children[5].nodeName != "scale")
 			return "Write in order: Translation, Rotation, Scale";
 
-		
-	
+
+
 	//Get INITIALS - frustrum
 	frustTemp = initials.getElementsByTagName("frustum");
 	if (frustTemp == null) {
@@ -176,7 +176,7 @@ LSXSceneGraph.prototype.parseInitials = function(rootElement) {
 	var frustum = frustTemp[0];
 
 	this.initials.frustum.near = this.reader.getFloat(frustum, "near");
-	
+
 	if (this.initials.frustum.near == null)
 		return "Frustum near is missing.";
 	if (isNaN(this.initials.frustum.near))
@@ -196,7 +196,7 @@ LSXSceneGraph.prototype.parseInitials = function(rootElement) {
 	if (transTemp.length != 1) {
 	    return "Only one translation in INITIALS is allowed.";
 	}
-	
+
     var translation = transTemp[0];
     var translationData = vec3.create();
     translationData[0] = this.reader.getFloat(translation, "x");
@@ -257,7 +257,7 @@ LSXSceneGraph.prototype.parseInitials = function(rootElement) {
     scaleData[1] = this.reader.getFloat(scale, "sy");
     scaleData[2] = this.reader.getFloat(scale, "sz");
     mat4.scale(this.initials.localTransformations, this.initials.localTransformations, scaleData);
- 
+
 	//Get INITIALS - reference -> reference length of axis
     refTemp = initials.getElementsByTagName("reference");
 	if (refTemp == null) {
@@ -433,7 +433,7 @@ LSXSceneGraph.prototype.parseMaterials = function(rootElement) {
 	}
 
 	var materials = tempMat[0];
-	
+
 	//Get each material
 	for(var i = 0; i < materials.children.length; ++i){
 		var material = materials.children[i];
@@ -452,7 +452,7 @@ LSXSceneGraph.prototype.parseMaterials = function(rootElement) {
 		this.materials[id].setAmbient(data[0],data[1],data[2],data[3]);
 		data = this.reader.getRGBA(material.children[4]);
 		this.materials[id].setEmission(data[0],data[1],data[2],data[3]);
-		
+
 	}
 }
 
@@ -497,7 +497,7 @@ LSXSceneGraph.prototype.parseLeaves = function(rootElement) {
 			case "rectangle":
 				data = this.reader.getArrayOfFloats(leaf, "args", 4);
 				if (data == null)
-					return "rectangle with error " + id; 
+					return "rectangle with error " + id;
 				this.leaves[id] = new LeafRectangle(id, data[0], data[1], data[2], data[3]);
 				break;
 			case "cylinder":
@@ -536,7 +536,7 @@ LSXSceneGraph.prototype.parseLeaves = function(rootElement) {
 				if(leaf.children.length != Math.pow((order + 1),2))
 					return "number of control points must be (order + 1)^2 in patch " + id;
 				index = 0;
-				
+
 				for (var j = 0; j < (order + 1); j++) {
 					var controlPointTemp = [];
 					for(var k = 0; k< (order + 1); k++){
@@ -549,20 +549,19 @@ LSXSceneGraph.prototype.parseLeaves = function(rootElement) {
 					controlPoints.push(controlPointTemp);
 					index += order + 1;
 				}
-				
+
 				this.leaves[id] = new LeafPatch(id, order, partsU, partsV, controlPoints);
 				break;
 			case "terrain":
-					texture = this.reader.getString(leaf, "texture");
-					if(!(texture in this.textures) && texture != "null" && texture != "clear")
-						return "texture error in terrain " + id;
-					
-					heightMap = this.reader.getString(leaf, "heightmap");
+          var pathRel = this.filename.substring(0, this.filename.lastIndexOf("/"));
+					var texture= pathRel + '/textures/' + this.reader.getString(leaf, "texture");
+					var heightMap = pathRel + '/textures/' + this.reader.getString(leaf, "heightmap");
+          console.log(heightMap);
 					if(heightMap == null)
 						return "missing heightmap in terrain " + id;
 					this.leaves[id] = new LeafTerrain(id, texture, heightMap);
 				break;
-					
+
 			default:
 				return "Leaf type unknown: " + type;
 		}
@@ -588,18 +587,18 @@ LSXSceneGraph.prototype.parseAnimations = function(rootElement) {
 	var animations = tempAnim[0];
 
 	allAnim = animations.getElementsByTagName("ANIMATION");
-	
+
 	//Get each animation
 	for (var i = 0; i < allAnim.length; i++) {
 		var anim = allAnim[i]
 		var id = this.reader.getString(anim, "id");
 		if (id in this.animations)
 			return "Duplicate animation id: " + id;
-		
+
 		var type = this.reader.getString(anim, "type");
 		var timeSpan = this.reader.getFloat(anim, "span");
-		
-		
+
+
 		//Different types of animations
 		switch (type) {
 			case "circular":
@@ -609,13 +608,13 @@ LSXSceneGraph.prototype.parseAnimations = function(rootElement) {
 
 				var radius = this.reader.getFloat(anim, "radius");
 				var startAng = this.reader.getFloat(anim,"startang") * deg2rad;
-				
+
 				var rotAng = this.reader.getFloat(anim,"rotang")* deg2rad ;
 				this.animations[id] = new CircularAnimation(id, timeSpan, vec3.fromValues(center[0], center[1], center[2]), radius, startAng, rotAng);
-				
+
 				break;
-				
-				
+
+
 				case "linear":
 					var controlPoints = [];
 					for (var j = 0; j < anim.children.length; j++) {
@@ -628,13 +627,13 @@ LSXSceneGraph.prototype.parseAnimations = function(rootElement) {
 					this.animations[id] = new LinearAnimation(id, timeSpan, controlPoints);
 
 					break;
-	
-	
+
+
 				default:
 					return "Animation type unknown: " + type;
-					
+
 					break;
-			
+
 		}
 	}
 }
@@ -699,7 +698,7 @@ LSXSceneGraph.prototype.parseNode = function(node) {
 		return "Copy id leaf " + id;
 	if (id in this.nodes)
 		return "Copy id node " + id;
-	
+
 	this.nodes[id] = new Node(id);
 
 	//Get NODE MATERIAL
@@ -707,7 +706,7 @@ LSXSceneGraph.prototype.parseNode = function(node) {
 	if (childNode.nodeName != "MATERIAL")
 		return "Expected MATERIAL in NODE " + id + "in 1st child.";
 	var material = this.reader.getString(childNode, "id");
-	
+
 	if(!(material in this.materials) && material != "null")
 		return "No MATERIAL " + material +  " for NODE " + id;
 	this.nodes[id].setMaterial(material);
@@ -717,10 +716,10 @@ LSXSceneGraph.prototype.parseNode = function(node) {
 	if (childNode.nodeName != "TEXTURE")
 		return "Expected TEXTURE in NODE " + id + "in 2nd child.";
 	var texture = this.reader.getString(childNode, "id");
-	
+
 	if(!(texture in this.textures) && texture != "null" && texture != "clear")
 		return "No TEXTURE " + texture +  " for NODE " + id;
-	
+
 	this.nodes[id].setTexture(texture);
 
 	//Get Local Transformations of Node - OPTIONAL
@@ -732,7 +731,7 @@ LSXSceneGraph.prototype.parseNode = function(node) {
 				var axis = this.reader.getString(transformation, "axis");
 				var angle = this.reader.getFloat(transformation, "angle");
 					switch (axis) {
-						 
+
 						case "x":
 							this.nodes[id].rotateX(angle * deg2rad);
 							break;
@@ -780,11 +779,11 @@ LSXSceneGraph.prototype.parseNode = function(node) {
 		this.nodes[id].addChild(new_child);
 	}
 }
-	
+
 /*
  * Callback to be executed on any read error
  */
 LSXSceneGraph.prototype.onXMLError=function (message) {
-	console.error("XML Loading Error: "+message);	
+	console.error("XML Loading Error: "+message);
 	this.loadedOk=false;
 };
