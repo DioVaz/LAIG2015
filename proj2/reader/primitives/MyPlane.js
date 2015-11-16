@@ -19,7 +19,7 @@ MyPlane.prototype.constructor = MyPlane;
 MyPlane.prototype.display = function() {
 	this.scene.pushMatrix();
 		this.scene.scale(-1,1,1);
-		//this.scene.rotate(0,1,0,Math.PI);
+		this.scene.rotate(0,1,0,Math.PI);
 		CGFnurbsObject.prototype.display.call(this);
 	this.scene.popMatrix();
 }

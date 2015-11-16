@@ -27,11 +27,25 @@ MyTerrain.prototype.initBuffers=function (scene) {
   this.myShader.setUniformsValues({uSampler2: 1});
   this.myShader.setUniformsValues({scale: 0.5});
 
+  this.nonScaledTexCoords = [
+  0, this.y1-this.y2,
+  this.x2-this.x1, this.y1-this.y2,
+  this.x2-this.x1, 0,
+  0, 0
+  ];
+
+  this.texCoords = this.nonScaledTexCoords.slice(0);
+
   this.plane = new MyPlane(scene, 200);
 }
 
 MyTerrain.prototype.scaleTexCoords = function(ampS, ampT) {
+  for (var i = 0; i < this.texCoords.length; i += 2) {
+    this.texCoords[i] = this.nonScaledTexCoords[i] / ampS;
+    this.texCoords[i + 1] = this.nonScaledTexCoords[i+1] / ampT;
+  }
 
+  this.updateTexCoordsGLBuffers();
 }
 
 MyTerrain.prototype.display = function() {
