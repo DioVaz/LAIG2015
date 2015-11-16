@@ -2,9 +2,9 @@
  * MyInterface
  * @constructor
  */
- 
+
  function MyInterface() {
-	//calls CGFinterface constructor 
+	//calls CGFinterface constructor
 	CGFinterface.call(this);
 };
 
@@ -19,6 +19,7 @@ MyInterface.prototype.init = function(application) {
 	// call CGFinterface init
 	CGFinterface.prototype.init.call(this, application);
 	this.gui = new dat.GUI();
+  
 };
 
 /**
@@ -33,11 +34,14 @@ MyInterface.prototype.onGraphLoaded = function(){
 	    var controller = group.add(this.scene.lightsEnabled,key);
 	    controller.onChange(function(enable) {
 	    	if(this.property == 'All'){
-	    		
+
 	    	}
 	    	self.scene.updateLight(this.property, enable);
 	    });
 	}
+
+
+
 }
 
 
@@ -50,7 +54,7 @@ MyInterface.prototype.processKeyboard = function(event)
 		console.log('Key presssed: ', event);
 		var speed=0.05;
 		var zoom = 1;
-	
+
 		switch (event.charCode)
 		{
 			//'a'
@@ -59,7 +63,7 @@ MyInterface.prototype.processKeyboard = function(event)
 			case (100): 	this.scene.camera.orbit('y', speed ); break;
 			//'w'
 			case (119): 	this.scene.camera.zoom(zoom); break;
-				
+
 			//'s'
 			case (115): 	this.scene.camera.zoom(-zoom); break;
 
@@ -85,4 +89,3 @@ MyInterface.prototype.processKeyboard = function(event)
 MyInterface.prototype.setScene = function(scene) {
     this.scene = scene;
 }
-    

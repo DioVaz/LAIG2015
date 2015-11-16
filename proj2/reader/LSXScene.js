@@ -21,13 +21,13 @@ LSXScene.prototype.init = function (application) {
     this.graph = null;
 
     this.initCameras(); //Set default configuration of camera view
-	
+
 
 	this.allLights = 'All'; //ID To control all lights
     this.lightsEnabled = []; //Control every single light
 
 	this.primitives = [];
- 	
+
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -43,6 +43,21 @@ LSXScene.prototype.init = function (application) {
 
     this.timer = 0;
     this.setUpdatePeriod(100/6);
+    this.testShaders=[
+    new CGFshader(this.gl, "shaders/flat.vert", "shaders/flat.frag"),
+    new CGFshader(this.gl, "shaders/uScale.vert", "shaders/uScale.frag"),
+    new CGFshader(this.gl, "shaders/varying.vert", "shaders/varying.frag"),
+    new CGFshader(this.gl, "shaders/texture1.vert", "shaders/texture1.frag"),
+    new CGFshader(this.gl, "shaders/texture2.vert", "shaders/texture2.frag"),
+    new CGFshader(this.gl, "shaders/texture3.vert", "shaders/texture3.frag")
+    ];
+    this.testShaders[1].setUniformsValues({normScale: 50.0});
+    this.testShaders[2].setUniformsValues({normScale: 50.0});
+    this.testShaders[5].setUniformsValues({normScale: 50.0});
+
+    // texture will have to be bound to unit 1 later, when using the shader, with "this.texture2.bind(1);"
+    this.testShaders[4].setUniformsValues({uSampler2: 1});
+    this.testShaders[5].setUniformsValues({uSampler2: 1});
 };
 /*
  * Sets the interface of the scene
@@ -65,20 +80,20 @@ LSXScene.prototype.setDefaultAppearance = function () {
     this.setAmbient(0.5, 0.5, 0.5, 1);
     this.setDiffuse(0.5, 0.5, 0.5, 1);
     this.setSpecular(0.5, 0.5, 0.5, 1);
-    this.setShininess(10.0);	
+    this.setShininess(10.0);
 };
 
 /*
  * Called on the graph is loaded ok
  */
-LSXScene.prototype.onGraphLoaded = function () 
+LSXScene.prototype.onGraphLoaded = function ()
 {
 	this.camera.near = this.graph.initials.frustum.near;
 	this.camera.far = this.graph.initials.frustum.far;
 
     if (this.graph.initials.referenceLength > 0)
 	   this.axis = new CGFaxis(this, this.graph.initials.referenceLength);
-	   
+
 	this.gl.clearColor(this.graph.illumination.background[0],this.graph.illumination.background[1],this.graph.illumination.background[2],this.graph.illumination.background[3]);
 	this.setGlobalAmbientLight(this.graph.illumination.ambient[0],this.graph.illumination.ambient[1],this.graph.illumination.ambient[2],this.graph.illumination.ambient[3]);
 
@@ -92,7 +107,7 @@ LSXScene.prototype.onGraphLoaded = function ()
     	this.lightsEnabled[this.lights[i].name] = this.lights[i].enabled;
     }
 
-	
+
 	//controls all lights
     this.lightsEnabled[this.allLights] = false;
 	for (i in this.lights) {
@@ -128,6 +143,9 @@ LSXScene.prototype.onGraphLoaded = function ()
 			case "patch":
 				this.primitives[key] = new MyPatch(this, leaf.degree, leaf.partsU, leaf.partsV, leaf.controlPoints);
 				break;
+      case "terrain":
+        this.primitives[key] = new MyTerrain(this,leaf.texture, leaf.heightMap);
+        break;
     	}
     }
 };
@@ -136,7 +154,7 @@ LSXScene.prototype.onGraphLoaded = function ()
  * Draws the scene. Updates with changes
  */
 LSXScene.prototype.display = function () {
-	
+
     // Clear image and depth buffer everytime we update the scene
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
@@ -150,13 +168,13 @@ LSXScene.prototype.display = function () {
 
 	//Process scene if LSX read ok
 	if (this.graph != null && this.graph.loadedOk)
-	{	
+	{
 		this.multMatrix(this.graph.initials.localTransformations);
-	
+
 		for (var i = 0; i < this.lights.length; ++i)
 			this.lights[i].update();
 
-		
+
 		// Draw axis
 		if (this.axis)
 	   		this.axis.display();
@@ -166,7 +184,7 @@ LSXScene.prototype.display = function () {
 
 		//Draws the scene from the graph by processing all nodes starting from the root
 		this.processScene();
-	}	
+	}
 };
 
 /*
@@ -177,7 +195,7 @@ LSXScene.prototype.processScene = function() {
 	this.setDefaultAppearance();
 }
 
-/* 
+/*
  * Process node
  * @param parentTexture receives the texture from the parent
  * @param parentMaterial receives the material from the parent
@@ -190,7 +208,7 @@ LSXScene.prototype.processNode = function(node, parentTexture, parentMaterial) {
 			this.graph.materials[parentMaterial].apply();
 		else
 			this.setDefaultAppearance();
-	
+
 		//set texture
 		var texture;
 
@@ -207,7 +225,7 @@ LSXScene.prototype.processNode = function(node, parentTexture, parentMaterial) {
 			texture.unbind();
 		return;
 	}
-	
+
 	//Applies transformations
 	animation = this.graph.nodes[node].update(this.timer);
 	this.graph.nodes[node].update(this.timer);
@@ -240,7 +258,14 @@ LSXScene.prototype.update = function(currTime) {
 		this.timer += (currTime - this.lastUpdate) / 1000;
 }
 
+LSXScene.prototype.updateWireframe=function(v)
+{
+  if (v)
+    this.teapot.setLineMode();
+    else
+      this.teapot.setFillMode();
 
+}
 
 /*
  * Updates lights from the interface
@@ -248,7 +273,7 @@ LSXScene.prototype.update = function(currTime) {
  * @param enable boolean
  */
 LSXScene.prototype.updateLight = function(lightId, enable) {
-	
+
 	//Switch only one light
 	if(lightId != this.allLights){
 		console.log("Changing light " + lightId);
@@ -262,11 +287,11 @@ LSXScene.prototype.updateLight = function(lightId, enable) {
 	}else{
 		//Switch all lights
 		console.log("Changing all lights");
-		for (var i = 0; i < this.graph.lights.length; ++i) {	
+		for (var i = 0; i < this.graph.lights.length; ++i) {
 			var light = this.lights[i];
 			enable ? light.enable() : light.disable();
 
 		}
-	
+
 	}
 }
