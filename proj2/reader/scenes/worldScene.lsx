@@ -352,9 +352,11 @@
 		<NODE id="testeSurface">
 			<MATERIAL id="null" />
 			<TEXTURE id="fireText" />
-			<TRANSLATION x="0" y="0" z="0" />
-      <ROTATION axis="x" angle="-180" />
-			<SCALE sx="50" sy="50" sz="50" />
+			<TRANSLATION x="-50" y="5" z="-100" />
+      <ROTATION axis="z" angle="175" />
+      <ROTATION axis="y" angle="-35" />
+      <ROTATION axis="x" angle="15" />
+			<SCALE sx="230" sy="230" sz="230" />
 			<DESCENDANTS>
 				<DESCENDANT id="idTerrain" />
 
